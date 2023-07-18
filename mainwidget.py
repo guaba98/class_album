@@ -23,7 +23,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def init_UI(self):
 
         # 카테고리 버튼 왼쪽에 추가
-        for category in ['home', 'login', 'register']:  # 홈버튼, 로그인버튼, 회원가입 버튼
+        for category in ['home', 'login', 'register', 'messenger']:  # 홈버튼, 로그인버튼, 회원가입 버튼
             image_path = f'./img/ui_img/{category}.png'
             new_category = Category(image_path, category, self)
             self.main_category.addWidget(new_category)

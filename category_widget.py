@@ -26,11 +26,16 @@ class Category(QWidget, Ui_Form):
     def move_page(self, event):
         """스택위젯 페이지 이동"""
         pages_dict = {
-            'home': self.parent.main_page,
+            'home': self.parent.content_page,
             'login': self.parent.login_page,
             'register': self.parent.register_page,
+            'messenger': self.parent.chat_page
         }
-        self.parent.stackedWidget.setCurrentWidget(pages_dict[self.category_name])
+        if self.category_name in ['register', 'login']:
+            self.parent.stackedWidget.setCurrentWidget(pages_dict[self.category_name])
+        else:
+            self.parent.sub_stackedwidget.setCurrentWidget(pages_dict[self.category_name])
+
         # return self.category_name
 
         # # 버튼 표시 및 레이아웃 지우기

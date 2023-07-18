@@ -887,7 +887,7 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="chat_page_2">
+            <widget class="QWidget" name="chat_page">
              <layout class="QHBoxLayout" name="horizontalLayout_19">
               <property name="leftMargin">
                <number>0</number>
