@@ -796,7 +796,42 @@
                           </spacer>
                          </item>
                          <item>
-                          <widget class="QPushButton" name="pushButton_4">
+                          <widget class="QLineEdit" name="reply_lineedit">
+                           <property name="minimumSize">
+                            <size>
+                             <width>620</width>
+                             <height>30</height>
+                            </size>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">background-color: rgb(255, 255, 255);</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QPushButton" name="reply_btn">
+                           <property name="minimumSize">
+                            <size>
+                             <width>90</width>
+                             <height>30</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>90</width>
+                             <height>16777215</height>
+                            </size>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">background-color: rgb(47, 128, 237);</string>
+                           </property>
+                           <property name="text">
+                            <string>댓글 달기</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item>
+                          <widget class="QPushButton" name="write_contents_btn">
                            <property name="minimumSize">
                             <size>
                              <width>90</width>

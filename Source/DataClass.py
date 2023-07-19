@@ -8,7 +8,7 @@ class DataClass:
         self.cur = None
 
     def connect_db(self):
-        self.conn = sqlite3.connect('data.db')
+        self.conn = sqlite3.connect('../Data/data.db')
         self.cur = self.conn.cursor()
 
     def close_db(self):

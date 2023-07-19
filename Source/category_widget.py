@@ -1,9 +1,6 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from UI.UI_category import Ui_Form
-from list_widget import ListItem
-from datetime import datetime
 
 
 class Category(QWidget, Ui_Form):
@@ -22,6 +19,7 @@ class Category(QWidget, Ui_Form):
         self.frame.mousePressEvent = lambda event: self.parent.move_page(c_name)
 
     def c_frame(self):
+        """프레임을 리턴합니다."""
         return self.frame
 
     # def move_page(self, event):

@@ -6,8 +6,8 @@ def compile_ui(ui_files, py_files):
         subprocess.run(command, shell=True)
 
 if __name__ == "__main__":
-    ui_files = ["./UI/UI_mainwidget.ui", "./UI/UI_category.ui", "./UI/UI_list.ui"]
-    py_files = ["./UI/UI_mainwidget.py", "./UI/UI_category.py", "./UI/UI_list.py"]
+    ui_files = ["./UI/UI_mainwidget.ui", "./UI/UI_category.ui", "./UI/UI_list.ui", "./UI/UI_board_read.ui", "./UI/UI_board_write.ui", "./UI/UI_server.ui"]
+    py_files = ["./UI/UI_mainwidget.py", "./UI/UI_category.py", "./UI/UI_list.py", "./UI/UI_board_read.py", "./UI/UI_board_write.py", "./UI/UI_server.py"]
 
     compile_ui(ui_files, py_files) # 여러 파일 컴파일
 # import os
