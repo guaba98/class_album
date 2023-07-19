@@ -31,5 +31,12 @@ class CWidget(QWidget, Ui_MainWindow):
 
         self.ip = '192.168.56.1' # 임시지정
         self.port = port
+        self.connectClicked()
 
+        # 전송하기
+        self.chat_send_btn.clicked.connect(self.sendMsg)
+
+
+    def connectClicked(self):
+        if self.c.b
 
