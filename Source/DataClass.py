@@ -1,4 +1,5 @@
 import sqlite3
+import pandas as pd
 
 
 class DataClass:
@@ -7,12 +8,13 @@ class DataClass:
         self.conn = None
         self.cur = None
 
+        # self.return_df('TB_NOTICE_BOARD')
+
     def connect_db(self):
         self.conn = sqlite3.connect('../Data/data.db')
         self.cur = self.conn.cursor()
 
     def close_db(self):
-        # self.conn.commit()
         self.conn.close()
 
     def create_table(self):
@@ -46,18 +48,20 @@ class DataClass:
             BOARD_READ int,
             UPDATE_TIME datetime,
             DELETE_TIME datetime
-            
-            
-            """,
+            );""",
         }
 
-        self.cur(create_table_query)
+        self.cur.execute(create_table_query['TB_NOTICE_BOARD'])
         self.close_db()
 
     def insert_data_in_table(self, table):
         """특정 테이블에 데이터를 삽입합니다."""
         pass
 
-
-if __name__ == '__main__':
-    pass
+    def return_df(self, table_name):
+        """데이터프레임을 리턴합니다."""
+        self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
+        self.cur = self.conn.cursor()
+        query = f'SELECT * FROM {table_name}'
+        df = pd.read_sql(query, self.conn)
+        return df

@@ -6,10 +6,10 @@ import socket
 import server
 from UI.UI_server import Ui_server_form
 
-
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
 port = 1121
+
 
 class CWidget(QWidget, Ui_server_form):
     def __init__(self):
@@ -22,8 +22,8 @@ class CWidget(QWidget, Ui_server_form):
     def initUI(self):
 
         # 아이피
-        host_ip = socket.gethostbyname(socket.gethostname()) # 현재 호스트 주소 자동 알려줌
-        self.host_ip_lineedit.setText(str(host_ip)) # ip 번호 입력
+        host_ip = socket.gethostbyname(socket.gethostname())  # 현재 호스트 주소 자동 알려줌
+        self.host_ip_lineedit.setText(str(host_ip))  # ip 번호 입력
         # self.ip = self.host_ip_lineedit.text() # 최종 아이피는 유저가 입력한 ip
 
         # 포트번호
@@ -34,7 +34,7 @@ class CWidget(QWidget, Ui_server_form):
         self.server_start_btn.toggled.connect(self.toggleButton)
 
         # 접속자 정보 부분
-        self.tableWidget_members.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # 열 자동정렬
+        self.tableWidget_members.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # 열 자동정렬
 
         # 채팅창 부분
         # TODO sendMsg 함수 연결 필요
@@ -55,26 +55,24 @@ class CWidget(QWidget, Ui_server_form):
     def updateClient(self, addr, isConnect=False):
         row = self.tableWidget_members.rowCount()
         if isConnect:
-            self.tableWidget_members.setRowCount(row+1)
+            self.tableWidget_members.setRowCount(row + 1)
             self.tableWidget_members.setItem(row, 0, QTableWidgetItem(addr[0]))
             self.tableWidget_members.setItem(row, 1, QTableWidgetItem(str(addr[0])))
         else:
             for r in range(row):
-                ip = self.tableWidget_members.item(r, 0).text() # ip
-                port = self.tableWidget_members.item(r, 1).text() # port
+                ip = self.tableWidget_members.item(r, 0).text()  # ip
+                port = self.tableWidget_members.item(r, 1).text()  # port
                 if addr[0] == ip and str(addr[1]) == port:
                     self.tableWidget_members.removeRow(r)
                     break
 
     def updateMsg(self, msg):
         self.chat_listwidget.addItem(QListWidgetItem(msg))
-        self.chat_listwidget.setCurrentRow(self.chat_listwidget.count()-1)
-
-
+        self.chat_listwidget.setCurrentRow(self.chat_listwidget.count() - 1)
 
     def sendMsg(self):
         if not self.s.bListen:
-            self.chat_lineedit.clear() # 라인에딧 창 클리어
+            self.chat_lineedit.clear()  # 라인에딧 창 클리어
             return
         sendmsg = self.chat_lineedit.text()
         self.updateMsg(sendmsg)
@@ -83,12 +81,10 @@ class CWidget(QWidget, Ui_server_form):
         self.chat_lineedit.clear()
 
     def clearMsg(self):
-        self.chat_lineedit.clear() # 사용할 일 있으면
+        self.chat_lineedit.clear()  # 사용할 일 있으면
 
     def closeEvent(self, e) -> None:
         self.s.stop()
-
-
 
 
 if __name__ == '__main__':

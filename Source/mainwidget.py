@@ -1,34 +1,37 @@
 # 모듈
-from PyQt5.QtWidgets import QMainWindow, QLayout
+from PyQt5.QtWidgets import QMainWindow, QLayout, QFileDialog
+from PyQt5.QtGui import QPixmap
+from PyQt5.Qt import Qt
 from datetime import datetime
 
-# ui
+# 클래스
 from UI.UI_mainwidget import Ui_MainWindow
 from Source.category_widget import Category
 from Source.list_widget import ListItem
 from Source.Page import PageBtn
 from Source.Board import BoardRead, BoardWrite
-
+from Source.DataClass import DataClass
 
 
 class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
+        self.data = DataClass()
+
         self.setupUi(self)
+        self.add_post()  # 글 내용 리스트 추가
+        self.event_connect()  # 클릭 시그널 연결
+        self.init_UI()  # 카테고리 버튼 추가
 
-        self.init_UI() # 카테고리 버튼 추가
-        self.add_post() # 글 내용 리스트 추가
-        self.event_connect() # 클릭 시그널 연결
+        # self.var_init()
 
-
-
-
-
+    # def var_init(self):
+    #     self.data = DataClass()
 
     # == 글 작성 부분
     def write_contents(self):
         """글 쓰기 눌렀을 때 발생하는 이벤트 모음"""
-        self.clear_layout(self.main_page_contents) # 레이아웃 지워주고
+        self.clear_layout(self.main_page_contents)  # 레이아웃 지워주고
         write_mode = BoardWrite()
         # img_btn, img_lab = write_mode.r_img_upload_btn()
         # img_btn.clicked.connect(self.upload_image(img_lab))
@@ -44,7 +47,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             pixmap = QPixmap(file_path)
             img_lab.setPixmap(pixmap.scaled(img_lab.size(), aspectRatioMode=Qt.KeepAspectRatio))
 
-
     # == ui 기본값 넣기
     # 카테고리 버튼
     def init_UI(self):
@@ -57,26 +59,33 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             if category == 'home':
                 new_category.change_backgrond_color()
 
-        self.make_arrow_button() # 화살표 번호 생성
+        self.make_arrow_button(self.c_df_cnt)  # 화살표 번호 생성
         self.reply_lineedit.hide()
         self.reply_btn.hide()
 
     # 화살표 버튼
-    def make_arrow_button(self):
+    def make_arrow_button(self, cnt):
         # 화살표 버튼 생성하기
         arrow_list = ['<<', '<', '>', '>>']
 
         # 버튼 생성
         for i in arrow_list[:2]:
-            btn = PageBtn(lay=self.main_paging, txt=f'{i}')
+            btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
-        for i in range(1, 5): # 임시로 생성해 둠
-            btn = PageBtn(lay=self.main_paging, txt=f'{i}')
+        for i in range(1, cnt):
+            btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
         for i in arrow_list[2:]:
-            btn = PageBtn(lay=self.main_paging, txt=f'{i}')
+            btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
 
+    def move_paging(self, btn_txt):
+        """선택한 버튼에 따라 페이지를 이동시킨다."""
+        # btn_move_dict = {
+        #     '<'
+        #
+        # }
+        print(btn_txt)
 
     # -- 클릭 이벤트 발생 모음
 
@@ -105,10 +114,8 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.contents_title.setText(title)
 
         # 내용 채우기
-        read_mode = BoardRead(title=title, writer=writer, img_path=None, contents='어쩌구 저쩌구', write_time='7월 19일' )
+        read_mode = BoardRead(title=title, writer=writer, img_path=None, contents='어쩌구 저쩌구', write_time='7월 19일')
         self.main_page_contents.addWidget(read_mode)
-
-
 
     def move_page(self, c_name):
         """스택위젯 페이지 이동"""
@@ -137,14 +144,20 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         list_title.set_title_bar()
         self.main_page_contents.addWidget(list_title)
 
-        cnt = 1
-        for i in range(10):
-            sample_list = ListItem(str(cnt), '테스트 제목 테스트 제목 테스트 제목', '이름', f'{date_format}', self)
+        c_df = self.data.return_df('TB_NOTICE_BOARD')
+        self.c_df_cnt = len(c_df.index)  # 글 갯수
+
+        for i in range(self.c_df_cnt):
+            index = c_df.iloc[i]['BOARD_ID']
+            title = c_df.iloc[i]['BOARD_TITLE']
+            name = c_df.iloc[i]['USER_NAME']
+            write_date = c_df.iloc[i]['UPDATE_TIME']
+
+            print(index, title, name, write_date)
+            sample_list = ListItem(number=str(index), title=title, writer=name,
+                                   write_date=write_date, parent=self)
             sample_list.set_contents_bar()
-            cnt += 1
             self.main_page_contents.addWidget(sample_list)
-
-
 
     def active_btn(self, type):
         if type:
@@ -153,7 +166,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.write_contents_btn.show()
             self.reply_lineedit.hide()
             self.reply_btn.hide()
-            self.make_arrow_button()
+            self.make_arrow_button(self.c_df_cnt)
             self.contents_title.setText('게시판 제목')
         else:
             self.search_btn.hide()
@@ -162,7 +175,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.reply_lineedit.show()
             self.reply_btn.show()
             self.clear_layout(self.main_paging)
-
 
     def clear_layout(self, layout: QLayout):
         """레이아웃 안의 모든 객체를 지웁니다."""
