@@ -1,9 +1,10 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QFontDatabase
 
 from mainwidget import MainWidget
+
 
 def main():
     app = QApplication(sys.argv)
@@ -16,7 +17,6 @@ def main():
     fontDB.addApplicationFont('./font/NanumSquareNeo-cBd.ttf')
     fontDB.addApplicationFont('./font/NanumSquareNeo-dEb.ttf')
     fontDB.addApplicationFont('./font/NanumSquareNeo-eHv.ttf')
-
 
     window = MainWidget()
     window.show()
