@@ -15,8 +15,6 @@ from Source.dig_warning import DialogWarning
 from Source.msgbox import MsgBox
 import client
 
-img_path = '../Data/receive_img/'  # 사진 경로 테스트
-
 
 class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -65,6 +63,10 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.chat_main_contents.addWidget(MsgBox(msg, send_time='10:10', parent=None))
         print('[메인] 업데이트된 메세지: ', msg)
 
+    def show_popup(self):
+        """여기에 팝업화면을 보여줍니다."""
+        print('팝업 경고창 띄워야 함')
+
     def updateDisconnect(self):
         print('[메인] 접속')
 
@@ -79,9 +81,8 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def sendLogin(self):
         email = self.email_lineedit.text()
         password = self.password_lineedit.text()
-        # self.c.send()
+        self.c.login_req(email)
         pass
-
 
 
     def clearMsg(self):

@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QFontDatabase
 
-from Source.mainwidget import MainWidget
+from mainwidget import MainWidget
 
 
 def main():
