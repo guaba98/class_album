@@ -117,7 +117,7 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         vaild_id = self.data.check_login(id=email, pw=password)
         if vaild_id:
             print(f'[server.py] {vaild_id}님 로그인 완료!')
-            # msg_ = f'[server.py] {vaild_id}님 로그인 완료!'
+            self.data.insert_user_log(email=email)
             msg_ = vaild_id
         else:
             print('[server.py] 유효한 아이디가 아닙니다.')

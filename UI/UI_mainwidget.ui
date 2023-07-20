@@ -315,6 +315,18 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_5">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
                 <item>
                  <widget class="QLabel" name="register_title_lab">
                   <property name="minimumSize">
@@ -340,7 +352,7 @@
                  <widget class="QLabel" name="register_name_lab">
                   <property name="font">
                    <font>
-                    <pointsize>14</pointsize>
+                    <pointsize>10</pointsize>
                    </font>
                   </property>
                   <property name="text">
@@ -356,13 +368,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="placeholderText">
+                   <string>이름을 입력하세요.</string>
+                  </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="register_email_lab">
                   <property name="font">
                    <font>
-                    <pointsize>14</pointsize>
+                    <pointsize>10</pointsize>
                    </font>
                   </property>
                   <property name="text">
@@ -378,13 +393,41 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="placeholderText">
+                   <string>@을 포함하여 입력해 주세요.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="register_cellphone_num_lab">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>핸드폰 번호</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="register_cellphone_num_lineedit">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="placeholderText">
+                   <string>핸드폰 번호를 입력하세요.</string>
+                  </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="register_password_lab">
                   <property name="font">
                    <font>
-                    <pointsize>14</pointsize>
+                    <pointsize>10</pointsize>
                    </font>
                   </property>
                   <property name="text">
@@ -399,6 +442,34 @@
                     <width>0</width>
                     <height>40</height>
                    </size>
+                  </property>
+                  <property name="placeholderText">
+                   <string>영어와 숫자로 이루어져야 합니다.</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="register_password_recheck_lab">
+                  <property name="font">
+                   <font>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>비밀번호 확인</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="register_password_recheck_lineedit">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="placeholderText">
+                   <string>비밀번호를 한번 더 입력하세요.</string>
                   </property>
                  </widget>
                 </item>
@@ -1209,8 +1280,8 @@ width: 0px;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>700</width>
-                              <height>331</height>
+                              <width>42</width>
+                              <height>310</height>
                              </rect>
                             </property>
                             <property name="styleSheet">

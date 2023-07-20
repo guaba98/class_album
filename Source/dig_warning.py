@@ -57,6 +57,22 @@ class DialogWarning(QDialog, Ui_Dialog):
             self.warning_lab.setText('사용 중인 아이디입니다.')
         elif t_type == 'user_can_use_id':
             self.warning_lab.setText('사용할 수 있는 아이디입니다.')
+        elif t_type == 'pw_recheck':
+            self.warning_lab.setText('비밀번호가 일치하지 않습니다.\n다시 확인해 주세요.')
+        elif t_type == 'used_email':
+            self.warning_lab.setText('사용중인 이메일입니다.')
+        elif t_type == 'not_valid_email':
+            self.warning_lab.setText('유효하지 않은 이메일입니다.')
+        elif t_type == 'name_input':
+            self.warning_lab.setText('이름을 입력해 주세요.')
+        elif t_type == 'email_input':
+            self.warning_lab.setText('이메일을 입력해 주세요.')
+        elif t_type == 'cell_num_input':
+            self.warning_lab.setText('핸드폰 번호를 입력해 주세요.')
+        elif t_type == 'pw_input':
+            self.warning_lab.setText('비밀번호를 입력해 주세요.')
+        elif t_type == 'unable_chat':
+            self.warning_lab.setText('회원만 채팅이 가능합니다.')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

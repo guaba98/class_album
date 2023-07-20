@@ -19,7 +19,7 @@ class ClientSocket:
         self.disconn = Signal()
         self.disconn.disconn_signal.connect(self.parent.updateDisconnect)
         self.login = Signal()
-        self.login.login_signal.connect(self.parent.show_popup)
+        self.login.login_signal.connect(self.parent.login)
 
         self.bConnect = False
 

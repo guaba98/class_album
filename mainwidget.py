@@ -28,16 +28,18 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         '''
         컴퓨터 ip : 192.168.56.1
         컴퓨터 자리 고정 ip : 10.10.20.103
-        노트북 ip: 192.168.56.1 
+        노트북 ip: 172.16.2.73
         '''
 
-        self.ip = '192.168.56.1'  # 임시지정
+        self.ip = '172.16.2.73'  # 임시지정
         self.port = 1121
+        self.login_state = False
         self.connectClicked()
         self.add_post()  # 글 내용 리스트 추가
         self.event_connect()  # 클릭 시그널 연결
         self.init_UI()  # 카테고리 버튼 추가
         # self.var_init()
+        self.register_cellphone_num_lineedit.setInputMask('000-0000-0000;_')
 
     # -- 버튼 시그널 발생 모음
     def event_connect(self):
@@ -55,7 +57,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
         # 시그널 연결
         self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
+        self.chat_lineedit.returnPressed.connect(self.sendMsg) # 메세지 보내기(엔터)
         self.login_start_btn.clicked.connect(self.sendLogin)  # 로그인 확인
+        self.register_admit_btn.clicked.connect(self.sendRegister)
 
     # -- 네트워크 관련
     def connectClicked(self):
@@ -82,12 +86,15 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         print('[mainwidget.py] 업데이트된 메세지: ', msg)
 
     # 0720 제작중
-    def show_popup(self, msg):
+    def login(self, msg):
         """여기에 팝업화면을 보여줍니다."""
         print('[mainwidget.py] 로그인 리턴값: ', msg)
         if msg != 'rejcet_login':
             self.dig_warning.set_dialog_type(bt_cnt=1, text=f'{msg}님 로그인 완료!')
-            self.dig_warning.exec_()
+            self.login_state = True  # 로그인 여부
+            if self.dig_warning.exec_():
+                self.stackedWidget.setCurrentWidget(self.main_page)  # 로그인 시 메인 페이지로 이동
+                # TODO 여기에 로그인 기록 db에 저장되는 부분 추가, 로그인 되면 로그인 회원가입 창이 안 뜨고 로그아웃 할 수 있는 부분 추가
         else:
             self.dig_warning.set_dialog_type(bt_cnt=1, t_type='reject_login')
             self.dig_warning.exec_()
@@ -96,16 +103,85 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         print('[mainwidget.py] 접속')
 
     def sendMsg(self):
-        sendmsg = self.chat_lineedit.text()
-        self.c.send(sendmsg)
-        self.chat_lineedit.clear()
-        print('[mainwidget.py] 내가 보낸 메세지: ', sendmsg)
+        if self.login_state:
+            sendmsg = self.chat_lineedit.text()
+            self.c.send(sendmsg)
+            self.chat_lineedit.clear()
+            print('[mainwidget.py] 내가 보낸 메세지: ', sendmsg)
+        else:
+            self.dig_warning.set_dialog_type(1, t_type='unable_chat') # 회원만 채팅이 가능함
+            self.dig_warning.exec_()
+            self.chat_lineedit.clear()
+
 
     # 하는중 하는중 하는중
     def sendLogin(self):
         email = self.email_lineedit.text()
         password = self.password_lineedit.text()
         self.c.login_request(email, password)
+
+    def sendRegister(self):
+        name = self.register_name_lineedit.text()
+        email = self.register_email_lineedit.text()
+        cell_num = self.register_cellphone_num_lineedit.text()
+        password = self.register_password_lineedit.text()
+        print(f'이름:{name}, 이메일:{email}, 핸드폰:{cell_num}, 비번:{password}')
+        cnt = 0
+        if name == '':
+            self.dig_warning.set_dialog_type(1, t_type='name_input')
+            self.dig_warning.exec_()
+            return
+        elif email == '':
+            self.dig_warning.set_dialog_type(1, t_type='email_input')
+            self.dig_warning.exec_()
+            return
+        elif cell_num == '--':
+            self.dig_warning.set_dialog_type(1, t_type='cell_num_input')
+            self.dig_warning.exec_()
+            return
+        elif password == '':
+            self.dig_warning.set_dialog_type(1, t_type='pw_input')
+            self.dig_warning.exec_()
+            return
+
+        if self.check_valid_email(email):
+            cnt += 1
+        else:
+            self.dig_warning.set_dialog_type(1, t_type='not_valid_email')
+            self.dig_warning.exec_()
+            return
+
+        if not self.data.check_user_email(email):  # 이메일 존재하는지 확인 -> 이 부분은 서버로 연결해야 함. 체크체크
+            cnt += 1
+        else:
+            self.dig_warning.set_dialog_type(1, t_type='used_email')
+            self.dig_warning.exec_()
+            return
+
+        if self.check_password_recheck():  # 비밀번호 동일한지 확인
+            cnt += 1
+        else:
+            self.dig_warning.set_dialog_type(1, t_type='pw_recheck')
+            self.dig_warning.exec_()
+            return
+        if cnt == 3:
+            print('회원가입 가능!') # ->여기서 회원가입 되면 서버에 db 저장하는 부분 연결해야 함. 체크체크
+
+
+    def check_valid_email(self, email):
+        list_ = ['@', '.']
+        for i in list_:
+            if i not in email:
+                return False
+        return True
+
+    def check_password_recheck(self):
+        """비밀번호 동일한지 체크"""
+        if self.register_password_lineedit.text() == \
+                self.register_password_recheck_lineedit.text():
+            return True
+        else:
+            return False
 
     def clearMsg(self):
         self.chat_lineedit.clear()
@@ -185,7 +261,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.active_btn(True)
             self.add_post()
 
-            # 여기에 리스트위젯 추가하는 부분
+        # 여기에 리스트위젯 추가하는 부분
         if c_name in ['register', 'login']:
             self.stackedWidget.setCurrentWidget(pages_dict[c_name])
         else:
