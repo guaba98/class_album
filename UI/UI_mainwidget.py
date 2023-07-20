@@ -239,6 +239,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.contents_title = QtWidgets.QLabel(self.frame_4)
         font = QtGui.QFont()
+        font.setFamily("나눔스퀘어 네오 Bold")
         font.setPointSize(17)
         self.contents_title.setFont(font)
         self.contents_title.setObjectName("contents_title")
@@ -381,11 +382,73 @@ class Ui_MainWindow(object):
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.widget_9)
         self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
+        self.scrollArea = QtWidgets.QScrollArea(self.widget_9)
+        self.scrollArea.setStyleSheet("QScrollBar:vertical {\n"
+"background: transparent;\n"
+"width: 15px;\n"
+"margin: 0px;\n"
+"}   \n"
+"QScrollBar::handle:vertical {\n"
+"background: #FFFFFF;  /* 하얀색 테두리 */\n"
+"border: 2px solid #2F80ED;  /* 파란색 테두리 */\n"
+"min-height: 20px;\n"
+"border-radius: 5px;  /* 테두리 깍기 */\n"
+"min-height: 20px;\n"
+"}\n"
+"QScrollBar::handle:vertical:hover{    \n"
+"background-color: #2F80ED;\n"
+"}\n"
+"QScrollBar::handle:vertical:pressed {    \n"
+"background-color: #2F80ED;\n"
+"}\n"
+"            \n"
+"QScrollBar::add-line:vertical,\n"
+"QScrollBar::sub-line:vertical,\n"
+"QScrollBar::add-line:horizontal,\n"
+"QScrollBar::sub-line:horizontal {\n"
+"height: 0px;\n"
+"width: 0px;\n"
+"}")
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 700, 331))
+        self.scrollAreaWidgetContents.setStyleSheet("            QScrollBar:vertical {\n"
+"                background: transparent;\n"
+"                width: 15px;\n"
+"                margin: 0px;\n"
+"            }   \n"
+"            QScrollBar::handle:vertical {\n"
+"                background: #FFFFFF;  /* 하얀색 테두리 */\n"
+"                border: 2px solid #2F80ED;  /* 파란색 테두리 */\n"
+"                min-height: 20px;\n"
+"                border-radius: 5px;  /* 테두리 깍기 */\n"
+"                min-height: 20px;\n"
+"            }\n"
+"            QScrollBar::handle:vertical:hover{    \n"
+"            background-color: #2F80ED;\n"
+"            }\n"
+"            QScrollBar::handle:vertical:pressed {    \n"
+"            background-color: #2F80ED;\n"
+"            }\n"
+"            \n"
+"            QScrollBar::add-line:vertical,\n"
+"            QScrollBar::sub-line:vertical,\n"
+"            QScrollBar::add-line:horizontal,\n"
+"            QScrollBar::sub-line:horizontal {\n"
+"                height: 0px;\n"
+"                width: 0px;\n"
+"            }")
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.chat_main_contents = QtWidgets.QVBoxLayout()
         self.chat_main_contents.setObjectName("chat_main_contents")
-        self.verticalLayout_12.addLayout(self.chat_main_contents)
-        spacerItem22 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        self.verticalLayout_12.addItem(spacerItem22)
+        self.verticalLayout_7.addLayout(self.chat_main_contents)
+        spacerItem22 = QtWidgets.QSpacerItem(20, 302, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_7.addItem(spacerItem22)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.verticalLayout_12.addWidget(self.scrollArea)
         self.verticalLayout_11.addWidget(self.widget_9)
         self.frame_6 = QtWidgets.QFrame(self.widget_8)
         self.frame_6.setMinimumSize(QtCore.QSize(0, 50))

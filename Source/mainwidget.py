@@ -11,22 +11,100 @@ from Source.list_widget import ListItem
 from Source.Page import PageBtn
 from Source.Board import BoardRead, BoardWrite
 from Source.DataClass import DataClass
+from Source.dig_warning import DialogWarning
+from Source.msgbox import MsgBox
+import client
+
+img_path = '../Data/receive_img/'  # 사진 경로 테스트
 
 
 class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
-        self.data = DataClass()
-
         self.setupUi(self)
+
+        self.data = DataClass()
+        self.dig_warning = DialogWarning()
+        self.c = client.ClientSocket(self)  # 클라이언트 소켓 생성
+
+        '''
+        컴퓨터 ip : 192.168.56.1
+        컴퓨터 자리 고정 ip : 10.10.20.103
+        노트북 ip: 192.168.56.1 
+        '''
+
+        self.ip = '192.168.56.1'  # 임시지정
+        self.port = 1121
+        self.connectClicked()
         self.add_post()  # 글 내용 리스트 추가
         self.event_connect()  # 클릭 시그널 연결
         self.init_UI()  # 카테고리 버튼 추가
-
         # self.var_init()
 
-    # def var_init(self):
-    #     self.data = DataClass()
+    # -- 네트워크 관련
+    def connectClicked(self):
+        if not self.c.bConnect:
+            ip = self.ip
+            port = self.port
+            if self.c.connectServer(ip, int(port)):
+                print('[메인] 접속 종료')
+            else:
+                self.c.stop()
+                self.chat_lineedit.clear()
+                print('[메인] 접속')
+        else:
+            self.c.stop()
+            self.chat_lineedit.clear()
+            print('[메인] 접속')
+
+    def __del__(self):
+        self.c.stop()
+
+    def updateMsg(self, msg):
+        # 여기에 메세지 추가하는 부분 넣기(클래스화)
+        self.chat_main_contents.addWidget(MsgBox(msg, send_time='10:10', parent=None))
+        print('[메인] 업데이트된 메세지: ', msg)
+
+    def updateDisconnect(self):
+        print('[메인] 접속')
+
+    def sendMsg(self):
+        sendmsg = self.chat_lineedit.text()
+        self.c.send(sendmsg)
+        self.chat_lineedit.clear()
+        print('[메인] 내가 보낸 메세지: ', sendmsg)
+
+
+    # 하는중 하는중 하는중
+    def sendLogin(self):
+        email = self.email_lineedit.text()
+        password = self.password_lineedit.text()
+        # self.c.send()
+        pass
+
+
+
+    def clearMsg(self):
+        self.chat_lineedit.clear()
+
+    # -- 버튼 시그널 발생 모음
+    def event_connect(self):
+        """버튼 시그널 연결"""
+
+        # 페이지 이동
+        self.register_login_lab.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
+            self.login_page)  # 로그인 페이지로 이동
+        self.register_btn.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
+            self.register_page)  # 회원가입 페이지로 이동
+
+        # 이벤트 연결
+        self.write_contents_btn.clicked.connect(self.write_contents)  # 글 작성하기
+        self.reply_btn.clicked.connect(self.write_reply)  # 댓글 작성
+
+        # 시그널 연결
+        self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
+        self.login_start_btn.clicked.connect(self.sendLogin) # 로그인 확인
+
 
     # == 글 작성 부분
     def write_contents(self):
@@ -38,6 +116,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.main_page_contents.addWidget(write_mode)
 
     def upload_image(self, img_lab):
+        """이미지 업로드하기"""
         file_dialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.AnyFile)
         file_dialog.setNameFilter("Images (*.png *.jpg)")
@@ -79,6 +158,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
 
+    # -- 페이지 이동 부분
     def move_paging(self, btn_txt):
         """선택한 버튼에 따라 페이지를 이동시킨다."""
         # btn_move_dict = {
@@ -86,36 +166,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         #
         # }
         print(btn_txt)
-
-    # -- 클릭 이벤트 발생 모음
-
-    def event_connect(self):
-        """버튼 시그널 연결"""
-        self.write_contents_btn.clicked.connect(self.write_contents)
-        self.reply_btn.clicked.connect(self.write_reply)
-
-    def write_reply(self):
-        """댓글 작성하는 부분"""
-        pass
-
-    def move_to_contents(self, number, title, writer, write_date):
-        """클릭한 페이지로 이동합니다."""
-
-        # 내용들 숨기기
-        self.search_btn.hide()
-        self.search_lineedit.hide()
-        self.write_contents_btn.hide()
-
-        # 레이아웃 비우기
-        self.clear_layout(self.main_page_contents)
-        self.clear_layout(self.main_paging)
-
-        # 라벨에 타이틀 넣기
-        self.contents_title.setText(title)
-
-        # 내용 채우기
-        read_mode = BoardRead(title=title, writer=writer, img_path=None, contents='어쩌구 저쩌구', write_time='7월 19일')
-        self.main_page_contents.addWidget(read_mode)
 
     def move_page(self, c_name):
         """스택위젯 페이지 이동"""
@@ -136,6 +186,30 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.stackedWidget.setCurrentWidget(pages_dict[c_name])
         else:
             self.sub_stackedwidget.setCurrentWidget(pages_dict[c_name])
+
+
+
+    def write_reply(self):
+        """댓글 작성하는 부분"""
+        pass
+
+    # -- 글 읽기 부분
+    def move_to_contents(self, number, title, writer, write_date):
+        """클릭한 페이지로 이동합니다."""
+
+        # 초기설정
+        self.active_btn(False)  # 다른 버튼들 내용들 숨기기
+        self.clear_layout(self.main_page_contents)  # 레이아웃 비우기
+        self.contents_title.setText(title)  # 라벨에 타이틀 넣기
+
+        # 조건
+        c_ = f"BOARD_TITLE = '{title}'"
+        contents = self.data.return_specific_data(table_name='TB_NOTICE_BOARD', column='BOARD_CONTENTS', conditon=c_)
+        img_ = self.data.return_specific_data(table_name='TB_NOTICE_BOARD', column='BOARD_IMG', conditon=c_)
+
+        # 내용 채우기
+        read_mode = BoardRead(title=title, writer=writer, img_path=img_, contents=contents, write_time=write_date)
+        self.main_page_contents.addWidget(read_mode)
 
     def add_post(self):
         # 카테고리에 리스트위젯 추가

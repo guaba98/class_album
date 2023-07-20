@@ -32,7 +32,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="titile_lab">
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -66,7 +66,7 @@
         <widget class="QWidget" name="widget" native="true">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="warning_lab">
             <property name="minimumSize">
              <size>
               <width>446</width>
@@ -90,7 +90,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="yes_btn">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -113,7 +113,7 @@ border-radius: 7px;</string>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="no_btn">
               <property name="minimumSize">
                <size>
                 <width>0</width>

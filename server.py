@@ -84,6 +84,7 @@ class ServerSocket(QObject): # 네트워크 관련 클래스
     def send(self, msg): # 클라이언트가 보낸 데이터 수신 시, 연결된 모든 클라이언트들에게 해당 메세지를 보내는 역할(broadcast)을 담당.
         try:
             for c in self.clients:
+                print('[서버] 보내는 클라이언트 소켓', c)
                 c.send(msg.encode())
         except Exception as e:
             print('Send() Error : ', e)

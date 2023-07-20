@@ -74,3 +74,4 @@ class ClientSocket:
             self.client.send(msg.encode())
         except Exception as e:
             print('Send() Error : ', e)
+

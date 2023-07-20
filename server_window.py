@@ -53,11 +53,12 @@ class CWidget(QWidget, Ui_server_form):
             self.server_start_btn.setText('서버 실행')
 
     def updateClient(self, addr, isConnect=False):
+        print('주소번호',addr)
         row = self.tableWidget_members.rowCount()
         if isConnect:
             self.tableWidget_members.setRowCount(row + 1)
             self.tableWidget_members.setItem(row, 0, QTableWidgetItem(addr[0]))
-            self.tableWidget_members.setItem(row, 1, QTableWidgetItem(str(addr[0])))
+            self.tableWidget_members.setItem(row, 1, QTableWidgetItem(str(addr[1])))
         else:
             for r in range(row):
                 ip = self.tableWidget_members.item(r, 0).text()  # ip
@@ -67,6 +68,7 @@ class CWidget(QWidget, Ui_server_form):
                     break
 
     def updateMsg(self, msg):
+        print('클라이언트에서 받은 메세지: ', msg)
         self.chat_listwidget.addItem(QListWidgetItem(msg))
         self.chat_listwidget.setCurrentRow(self.chat_listwidget.count() - 1)
 
@@ -74,9 +76,9 @@ class CWidget(QWidget, Ui_server_form):
         if not self.s.bListen:
             self.chat_lineedit.clear()  # 라인에딧 창 클리어
             return
-        sendmsg = self.chat_lineedit.text()
+        sendmsg = '[공지]' + self.chat_lineedit.text()
         self.updateMsg(sendmsg)
-        print(sendmsg)
+        print('[서버] 보낸 메세지: ',sendmsg)
         self.s.send(sendmsg)
         self.chat_lineedit.clear()
 

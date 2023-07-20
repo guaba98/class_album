@@ -11,7 +11,8 @@ class DataClass:
         # self.return_df('TB_NOTICE_BOARD')
 
     def connect_db(self):
-        self.conn = sqlite3.connect('../Data/data.db')
+        # self.conn = sqlite3.connect('../Data/data.db')
+        self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db")
         self.cur = self.conn.cursor()
 
     def close_db(self):
@@ -60,8 +61,30 @@ class DataClass:
 
     def return_df(self, table_name):
         """데이터프레임을 리턴합니다."""
-        self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
-        self.cur = self.conn.cursor()
+        # self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db") # 노트북 경로
+        # self.cur = self.conn.cursor()
+        self.connect_db()
         query = f'SELECT * FROM {table_name}'
         df = pd.read_sql(query, self.conn)
         return df
+
+    def return_specific_data(self, table_name, column, conditon):
+        """특정 열 데이터만 반환합니다."""
+        self.connect_db()
+        query = f'SELECT {column} FROM {table_name}'
+        if conditon is not None:
+            query += ' WHERE ' + conditon
+
+        r_data = pd.read_sql(query, self.conn)
+        specific_data = r_data.values[0][0]
+        return specific_data
+
+if __name__ == '__main__':
+    # d = DataClass()
+    # c_ = "BOARD_TITLE = '야너두할수있어'"
+    # result = d.return_specific_data(table_name='TB_NOTICE_BOARD',
+    #                        column='BOARD_CONTENTS',
+    #                        conditon=c_)
+    # # print(result.values[0][0])
+    # print(result.values[0][0])
+    pass

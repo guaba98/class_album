@@ -4,6 +4,7 @@ from PyQt5.Qt import *
 from UI.UI_board_read import Ui_board_read_widget
 from UI.UI_board_write import Ui_board_write_widget
 
+# img = 'C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\receive_img\\img_1.png'
 class BoardWrite(QWidget, Ui_board_write_widget):
     """글 작성하는 클래스"""
     def __init__(self):
@@ -38,10 +39,11 @@ class BoardRead(QWidget, Ui_board_read_widget):
     def __init__(self, writer, title, write_time, img_path, contents): # 제목, 이미지 경로, 글내용
         super().__init__()
         self.setupUi(self)
+        print(writer, title, write_time, img_path, contents)
 
         self.writer_lab.setText(writer)
         self.write_time_lab.setText(write_time)
-        # self.img_lab.setPixmap(QPixmap(img_path)) # 이미지
+        self.img_lab.setPixmap(QPixmap(img_path).scaled(QSize(500, 500), aspectRatioMode=Qt.KeepAspectRatio)) # 이미지
         self.contents_lab.setText(contents)
         # self.tableWidget # 댓글 내용
 

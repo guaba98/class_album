@@ -23,7 +23,8 @@ class ListItem(QWidget, Ui_Form):
 
         # 프레임 클릭하면 창 옮기기
 
-        self.List_frame.mousePressEvent = lambda event: self.parent.move_to_contents(number, title, writer, write_date)
+        self.List_frame.mousePressEvent = lambda event: self.parent.move_to_contents(
+            number, title, writer, write_date)
 
 
     def set_title_bar(self):
@@ -34,7 +35,7 @@ class ListItem(QWidget, Ui_Form):
             labs.setStyleSheet("color: {}".format(QColor(255, 255, 255).name()))
 
     def set_contents_bar(self):
-        """내용 제목을 변경합니다."""
+        """내용 제목을 변경합니다. -> 하단에만 파란 선 추가"""
         self.List_frame.setStyleSheet(
             """
             border: 1px solid #2F80ED;

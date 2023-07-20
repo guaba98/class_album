@@ -1,13 +1,14 @@
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
-from UI.UI_mainwidget import Ui_MainWindow
-import client
+# from PyQt5.QtCore import *
+# from PyQt5.QtWidgets import *
+# from UI.UI_mainwidget import Ui_MainWindow
+# import client
+# import sys
 
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 port = 1121
 
 
-class CWidget(QWidget, Ui_MainWindow):
+class CWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -70,6 +71,5 @@ class CWidget(QWidget, Ui_MainWindow):
 
     def closeEvent(self, e):
         self.c.stop()
-
 
 
