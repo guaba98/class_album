@@ -55,8 +55,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
         # 시그널 연결
         self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
-        self.login_start_btn.clicked.connect(self.sendLogin) # 로그인 확인
-
+        self.login_start_btn.clicked.connect(self.sendLogin)  # 로그인 확인
 
     # -- 네트워크 관련
     def connectClicked(self):
@@ -102,7 +101,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.chat_lineedit.clear()
         print('[mainwidget.py] 내가 보낸 메세지: ', sendmsg)
 
-
     # 하는중 하는중 하는중
     def sendLogin(self):
         email = self.email_lineedit.text()
@@ -111,9 +109,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
     def clearMsg(self):
         self.chat_lineedit.clear()
-
-
-
 
     # == 글 작성 부분
     def write_contents(self):
@@ -195,8 +190,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.stackedWidget.setCurrentWidget(pages_dict[c_name])
         else:
             self.sub_stackedwidget.setCurrentWidget(pages_dict[c_name])
-
-
 
     def write_reply(self):
         """댓글 작성하는 부분"""
