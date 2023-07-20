@@ -68,9 +68,14 @@ class CWidget(QWidget, Ui_server_form):
                     break
 
     def updateMsg(self, msg):
-        print('클라이언트에서 받은 메세지: ', msg)
+        print('[server_window.py]클라이언트에서 받은 메세지: ', msg)
         self.chat_listwidget.addItem(QListWidgetItem(msg))
         self.chat_listwidget.setCurrentRow(self.chat_listwidget.count() - 1)
+
+    # def handle_login_request(self, id, pw):
+    #     print('[server_window.py]클라이언트가 전송한 아이디, 비밀법호', id, pw)
+    #     self.s.
+    #     pass
 
     def sendMsg(self):
         if not self.s.bListen:

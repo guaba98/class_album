@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt, pyqtSignal, QObject
 class Signal(QObject): # 소켓 클래스가 연결 끊김, 데이터 수신 시그널 발생 시 window.py 파일이 생성하는 윈도우 창으로 사용자 정의 시그널 보내기 위함
     recv_signal = pyqtSignal(str) # 메세지 받는 시그널
     disconn_signal = pyqtSignal() # 연결 끊는 시그널
-    # login_signal = pyqtSignal(str, str)
+    login_signal = pyqtSignal(str)
 
 
 class ClientSocket:
@@ -18,8 +18,8 @@ class ClientSocket:
         self.recv.recv_signal.connect(self.parent.updateMsg)
         self.disconn = Signal()
         self.disconn.disconn_signal.connect(self.parent.updateDisconnect)
-        # self.login = Signal()
-        # self.login.login_signal.connect(self.parent.show_popup)
+        self.login = Signal()
+        self.login.login_signal.connect(self.parent.show_popup)
 
         self.bConnect = False
 
@@ -63,26 +63,29 @@ class ClientSocket:
                 msg = str(recv, encoding='utf-8')
                 # 문자열로 인코딩하고 부모 윈도우로 보내 화면에 출력하게 함
                 # -> 반드시 쓰레드로 구성되어야 하며, 또 언제 데이터르가 수신될 지 모르므로 무한루프로 구성해 계속 대기해야 한다.
+                print('[client.py] 수신 타입', type(msg))
+
                 if msg:
                     self.recv.recv_signal.emit(msg)
-                    # print('[받은 메세지]:', msg)
+                    print('[cilent.py 받은 메세지]:', msg)
+                    self.login.login_signal.emit(msg)
 
         self.stop()
 
-    # 하는중 하는중 하는중
+    # 하는중 하는중 하는중 0720
     def login_request(self, username, password):
-        self.c.login_request_signal.emit(username, password)  # 로그인 요청 시그널 호출
+        self.client.send(('LOGIN_REQ'+ username +":"+ password).encode())
+        # self.client.login_signal.emit(username, password)  # 로그인 요청 시그널 호출
 
     def signup_request(self, username, password, email):
-        self.c.signup_request_signal.emit(username, password, email)  # 회원가입 요청 시그널 호출
+        self.client.signup_request_signal.emit(username, password, email)  # 회원가입 요청 시그널 호출
 
     def duplicate_check_request(self, username):
-        self.c.duplicate_check_signal.emit(username)  # 로그인 중복 체크 요청 시그널 호출
+        self.client.duplicate_check_signal.emit(username)  # 로그인 중복 체크 요청 시그널 호출
 
     def send(self, msg): # 부모 윈도우의 '보내기'를 누르면 호출되는 함수.
         if not self.bConnect:
             return
-
         try:
             self.client.send(msg.encode())
         except Exception as e:

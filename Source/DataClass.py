@@ -79,6 +79,37 @@ class DataClass:
         specific_data = r_data.values[0][0]
         return specific_data
 
+    def check_login(self, id, pw):
+        """로그인 데이터를 확인해서 데이터가 있는지 확인합니다."""
+        self.connect_db()
+        query = f"SELECT * FROM TB_USER WHERE USER_EMAIL = '{id}' AND USER_PW = '{pw}'"
+        print('[dataclass] 쿼리확인: ', query)
+        df = pd.read_sql(query, self.conn)
+        if len(df) > 0:
+            name = df['USER_NAME'].values[0]
+            return name
+        else:
+            return False
+
+
+    # def login(self, data: ReqLogin) -> PerLogin:
+    #     print("[ login ]")
+    #     """클라이언트 로그인 요청 -> 서버 로그인 허가 """
+    #     result: PerLogin = PerLogin(rescode=2, user_id_=data.id_)
+    #     sql = f"SELECT * FROM TB_USER WHERE USER_ID = '{data.id_}' AND USER_PW = '{data.password}'"
+    #     print(sql)
+    #     df = pd.read_sql(sql, self.conn)
+    #     row = len(df)
+    #     print("row", row)
+    #
+    #     if row in [None, 0]:
+    #         result.rescode = 0
+    #     # 입력한 아이디와 비밀번호, db에서 가진 아이디와 비밀번호
+    #     # elif data.id_ != row[1] or data.password != row[2]:
+    #     #     result.rescode = 1
+    #     else:
+    #         result.rescode = 2
+    #     return result
 if __name__ == '__main__':
     # d = DataClass()
     # c_ = "BOARD_TITLE = '야너두할수있어'"

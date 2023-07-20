@@ -23,7 +23,9 @@ class Ui_Dialog(object):
         self.verticalLayout.setObjectName("verticalLayout")
         self.titile_lab = QtWidgets.QLabel(Dialog)
         self.titile_lab.setMaximumSize(QtCore.QSize(16777215, 60))
-        self.titile_lab.setStyleSheet("background-color: rgb(47, 128, 237);")
+        self.titile_lab.setStyleSheet("background-color: rgb(47, 128, 237);\n"
+"border-top-left-radius:7px;\n"
+"border-top-right-radius: 7px;")
         self.titile_lab.setText("")
         self.titile_lab.setObjectName("titile_lab")
         self.verticalLayout.addWidget(self.titile_lab)
@@ -38,7 +40,12 @@ class Ui_Dialog(object):
         self.warning_lab = QtWidgets.QLabel(self.widget)
         self.warning_lab.setMinimumSize(QtCore.QSize(446, 192))
         self.warning_lab.setMaximumSize(QtCore.QSize(450, 16777215))
+        font = QtGui.QFont()
+        font.setFamily("나눔스퀘어 네오 Regular")
+        font.setPointSize(16)
+        self.warning_lab.setFont(font)
         self.warning_lab.setStyleSheet("background-color: rgb(208, 208, 208);")
+        self.warning_lab.setAlignment(QtCore.Qt.AlignCenter)
         self.warning_lab.setObjectName("warning_lab")
         self.verticalLayout_3.addWidget(self.warning_lab)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
@@ -46,6 +53,7 @@ class Ui_Dialog(object):
         self.yes_btn = QtWidgets.QPushButton(self.widget)
         self.yes_btn.setMinimumSize(QtCore.QSize(0, 50))
         font = QtGui.QFont()
+        font.setFamily("나눔스퀘어 네오 Regular")
         font.setPointSize(15)
         self.yes_btn.setFont(font)
         self.yes_btn.setStyleSheet("background-color: rgb(47, 128, 237);\n"
@@ -56,6 +64,7 @@ class Ui_Dialog(object):
         self.no_btn = QtWidgets.QPushButton(self.widget)
         self.no_btn.setMinimumSize(QtCore.QSize(0, 50))
         font = QtGui.QFont()
+        font.setFamily("나눔스퀘어 네오 Regular")
         font.setPointSize(15)
         self.no_btn.setFont(font)
         self.no_btn.setStyleSheet("border-radius: 7px;\n"

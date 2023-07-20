@@ -488,7 +488,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(0)
         self.sub_stackedwidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -497,7 +497,9 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.login_title_lab.setText(_translate("MainWindow", "Login"))
         self.email_label.setText(_translate("MainWindow", "이메일"))
+        self.email_lineedit.setText(_translate("MainWindow", "admin"))
         self.password_label.setText(_translate("MainWindow", "비밀번호"))
+        self.password_lineedit.setText(_translate("MainWindow", "1234"))
         self.register_btn.setText(_translate("MainWindow", "새로오셨나요? 회원으로 함께하세요."))
         self.login_start_btn.setText(_translate("MainWindow", "시작하기"))
         self.register_title_lab.setText(_translate("MainWindow", "Register"))

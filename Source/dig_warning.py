@@ -41,22 +41,26 @@ class DialogWarning(QDialog, Ui_Dialog):
     # bt_cnt : 버튼 수량
     # t_type : 다이얼로그 타입
     def set_dialog_type(self, bt_cnt: int, t_type="", text=""):
-        # if bt_cnt == 1:
-        #     self.layout_double.setVisible(False)
-        #     self.btn_single.setVisible(True)
-        #
-        # elif bt_cnt == 2:
-        #     self.layout_double.setVisible(True)
-        #     self.btn_single.setVisible(False)
+        if bt_cnt == 1:
+            self.no_btn.setVisible(False)
+            self.yes_btn.setVisible(True)
+
+        elif bt_cnt == 2:
+            self.no_btn.setVisible(True)
+            self.yes_btn.setVisible(True)
+
         if text:
-            self.lbl_text.setText(text)
+            self.warning_lab.setText(text)
+        if t_type == 'reject_login':
+            self.warning_lab.setText('존재하는 아이디나 비밀번호가 아닙니다.')
         elif t_type == 'used_id':
             self.warning_lab.setText('사용 중인 아이디입니다.')
         elif t_type == 'user_can_use_id':
             self.warning_lab.setText('사용할 수 있는 아이디입니다.')
 
 if __name__ == '__main__':
-    # app = QApplication(sys.argv)
+    app = QApplication(sys.argv)
+    app.setStyle('Fusion')
     # d = DialogWarning()
     # d.show()
     # app.exec_()

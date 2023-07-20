@@ -1,14 +1,15 @@
 from threading import Thread  # 파이썬 모듈 불러오기
 from socket import *
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
+from Source.DataClass import DataClass
 
 
 class ServerSocket(QObject):  # 네트워크 관련 클래스
     update_signal = pyqtSignal(tuple, bool)
     recv_signal = pyqtSignal(str)
 
-    # 시그널 제작중
-    login_req_signal = pyqtSignal(str)  # 로그인 요청 시그널
+    # 시그널 제작중 0720
+    login_req_signal = pyqtSignal(str, str, socket)  # 로그인 요청 시그널
     duplicate_check_signal = pyqtSignal(str)  # 이메일 중복 확인 시그널
     signup_req_signal = pyqtSignal(str, str)  # 회원가입 요청 시그널 --> 이메일, 비밀번호
 
@@ -20,10 +21,17 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         self.ip = []  # 접속한 클라이언트들의 ip 주소를 저장할 변수
         self.threads = []  # 클라이언트 접속, 데이터 수신시 보내는 시그널
 
+        # db 클래스 연결
+        self.data = DataClass()
+
         # 시그널 정리
         self.update_signal.connect(self.parent.updateClient)
         self.recv_signal.connect(self.parent.updateMsg)  # 메세지 수신 시그널
-        # self.login_signal.connect(self.parent.)
+
+        # 정리중 0720
+        self.login_req_signal.connect(self.handle_login_request)
+        # self.duplicate_check_signal.connect(self.handle_duplicate_check)
+        # self.signup_req_signal.connect(self.hanle_signup_request)
 
     def __del__(self):  # 서버소켓 클래스 객체가 파괴될 때 호출되는 소멸자. stop() 함수 사용해 대기중인 서버 소켓 종료
         self.stop()
@@ -85,10 +93,45 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
                     self.recv_signal.emit(msg)  # 부모 윈도우에 전달하는 부분
                     print('[RECV]: ', addr, msg)
 
+                    # 제작중 0720
+                    if msg.startswith('LOGIN_REQ'):  # 로그인 확인
+                        msg_ = msg.replace('LOGIN_REQ', '')
+                        email = msg_.split(':')[0]
+                        pw = msg_.split(':')[1]
+                        print('이메일과 비번', email, pw)
+                        print('[클라이언트 타입]', type(client))
+                        self.login_req_signal.emit(email, pw, client)
+                    # elif msg.startswith("DUPLICATE_CHECK"):
+                    #     email = msg.split(":")[1]
+                    #     self.duplicate_check_signal.emit(email)
+                    # elif msg.startswith("SIGNUP_REQ"):
+                    #     email, password = msg.split(":")[1:]
+                    #     self.signup_req_signal.emit(email, password)
+
         # 이후 다시 무한 반복하며 recv() 함수를 호출해 다음 메세지 수신을 대기한다.
         self.removeClient(addr, client)
 
+    def handle_login_request(self, email, password, client):
+        # 로그인 요청 처리 구현
+        print("[server.py]", email, password)
+        vaild_id = self.data.check_login(id=email, pw=password)
+        if vaild_id:
+            print(f'[server.py] {vaild_id}님 로그인 완료!')
+            # msg_ = f'[server.py] {vaild_id}님 로그인 완료!'
+            msg_ = vaild_id
+        else:
+            print('[server.py] 유효한 아이디가 아닙니다.')
+            # msg_ = '[server.py] 유효한 아이디가 아닙니다.'
+            msg_ = 'rejcet_login'
+        self.send_spc_client(client, msg_)
 
+    def handle_duplicate_check(self, email):
+        # 중복 확인 요청 처리 구현
+        print("Duplicate check request received for email:", email)
+
+    def handle_signup_request(self, email, password):
+        # 회원가입 요청 처리 구현
+        print("Signup request received for email:", email, "and password:", password)
 
     def send(self, msg):  # 클라이언트가 보낸 데이터 수신 시, 연결된 모든 클라이언트들에게 해당 메세지를 보내는 역할(broadcast)을 담당.
         try:
@@ -97,6 +140,13 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
                 c.send(msg.encode())
         except Exception as e:
             print('Send() Error : ', e)
+
+    def send_spc_client(self, client, msg):
+        """특정 클라이언트들에게만 신호를 보낸다."""
+        try:
+            client.send(msg.encode())
+        except Exception as e:
+            print('[server.py] 특정 클라이언트 정보 전달 오류: ', e)
 
     def removeClient(self, addr, client):  # 클라이언트의 연결이 끊어진 경우, 부모 윈도우로 이를 알림
         # find closed client index

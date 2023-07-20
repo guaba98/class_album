@@ -40,7 +40,9 @@
         </size>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(47, 128, 237);</string>
+        <string notr="true">background-color: rgb(47, 128, 237);
+border-top-left-radius:7px;
+border-top-right-radius: 7px;</string>
        </property>
        <property name="text">
         <string/>
@@ -79,11 +81,20 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>나눔스퀘어 네오 Regular</family>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(208, 208, 208);</string>
             </property>
             <property name="text">
              <string>여기에 경고 경고문구</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -99,6 +110,7 @@
               </property>
               <property name="font">
                <font>
+                <family>나눔스퀘어 네오 Regular</family>
                 <pointsize>15</pointsize>
                </font>
               </property>
@@ -122,6 +134,7 @@ border-radius: 7px;</string>
               </property>
               <property name="font">
                <font>
+                <family>나눔스퀘어 네오 Regular</family>
                 <pointsize>15</pointsize>
                </font>
               </property>

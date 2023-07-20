@@ -39,6 +39,25 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.init_UI()  # 카테고리 버튼 추가
         # self.var_init()
 
+    # -- 버튼 시그널 발생 모음
+    def event_connect(self):
+        """버튼 시그널 연결"""
+
+        # 페이지 이동
+        self.register_login_lab.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
+            self.login_page)  # 로그인 페이지로 이동
+        self.register_btn.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
+            self.register_page)  # 회원가입 페이지로 이동
+
+        # 이벤트 연결
+        self.write_contents_btn.clicked.connect(self.write_contents)  # 글 작성하기
+        self.reply_btn.clicked.connect(self.write_reply)  # 댓글 작성
+
+        # 시그널 연결
+        self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
+        self.login_start_btn.clicked.connect(self.sendLogin) # 로그인 확인
+
+
     # -- 네트워크 관련
     def connectClicked(self):
         if not self.c.bConnect:
@@ -61,50 +80,39 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def updateMsg(self, msg):
         # 여기에 메세지 추가하는 부분 넣기(클래스화)
         self.chat_main_contents.addWidget(MsgBox(msg, send_time='10:10', parent=None))
-        print('[메인] 업데이트된 메세지: ', msg)
+        print('[mainwidget.py] 업데이트된 메세지: ', msg)
 
-    def show_popup(self):
+    # 0720 제작중
+    def show_popup(self, msg):
         """여기에 팝업화면을 보여줍니다."""
-        print('팝업 경고창 띄워야 함')
+        print('[mainwidget.py] 로그인 리턴값: ', msg)
+        if msg != 'rejcet_login':
+            self.dig_warning.set_dialog_type(bt_cnt=1, text=f'{msg}님 로그인 완료!')
+            self.dig_warning.exec_()
+        else:
+            self.dig_warning.set_dialog_type(bt_cnt=1, t_type='reject_login')
+            self.dig_warning.exec_()
 
     def updateDisconnect(self):
-        print('[메인] 접속')
+        print('[mainwidget.py] 접속')
 
     def sendMsg(self):
         sendmsg = self.chat_lineedit.text()
         self.c.send(sendmsg)
         self.chat_lineedit.clear()
-        print('[메인] 내가 보낸 메세지: ', sendmsg)
+        print('[mainwidget.py] 내가 보낸 메세지: ', sendmsg)
 
 
     # 하는중 하는중 하는중
     def sendLogin(self):
         email = self.email_lineedit.text()
         password = self.password_lineedit.text()
-        self.c.login_req(email)
-        pass
-
+        self.c.login_request(email, password)
 
     def clearMsg(self):
         self.chat_lineedit.clear()
 
-    # -- 버튼 시그널 발생 모음
-    def event_connect(self):
-        """버튼 시그널 연결"""
 
-        # 페이지 이동
-        self.register_login_lab.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
-            self.login_page)  # 로그인 페이지로 이동
-        self.register_btn.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
-            self.register_page)  # 회원가입 페이지로 이동
-
-        # 이벤트 연결
-        self.write_contents_btn.clicked.connect(self.write_contents)  # 글 작성하기
-        self.reply_btn.clicked.connect(self.write_reply)  # 댓글 작성
-
-        # 시그널 연결
-        self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
-        self.login_start_btn.clicked.connect(self.sendLogin) # 로그인 확인
 
 
     # == 글 작성 부분
