@@ -46,11 +46,29 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.init_UI()  # 초기설정(카테고리 버튼 추가 등)
         # self.var_init() # 변수
 
+
+
     # -- 변수
     # def var_init(self):
     #     """변수 들어가는 함수"""
     #     self.login_state = False
     #     self.user_name = None
+
+
+    # TODO 여기서 사진을 클라이언트 -> 서버 -> DB 저장 및 사진 경로 저장
+    #  -> 메인윈도우 레이아웃 객체 추가 하는 부분까지 연결
+    def send_save_post(self, title, contents, img_path=None):
+        print('[mainwindow.py] 사진 저장 테스트 중')
+        print(title, contents, img_path)
+        self.c.post_upload_request(title=title, contents=contents, img_path=img_path)
+
+    # TODO 이 함수에서는 서버에서 정보들을 받아서 레이아웃에 객체들을 넣어주는 역할을 함.
+    def receive_upload_post(self,title, contents, img_path ):
+        pass
+
+
+
+
 
     # -- 버튼 시그널 발생 모음
     def event_connect(self):
@@ -110,8 +128,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def sendMsg(self):
         if self.login_state:
             sendmsg = self.chat_lineedit.text()
-            # TODO 사용자의 이름을 넣는 부분 체크
-            # name =
             self.c.send(msg=sendmsg, name=self.user_name)
             print('[mainwidget.py] 내가 보낸 메세지: ', self.user_name, sendmsg)
         else:
@@ -236,7 +252,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def write_contents(self):
         """글 쓰기 눌렀을 때 발생하는 이벤트 모음"""
         self.clear_layout(self.main_page_contents)  # 레이아웃 지워주고
-        write_mode = BoardWrite()
+        write_mode = BoardWrite(self)
         # img_btn, img_lab = write_mode.r_img_upload_btn()
         # img_btn.clicked.connect(self.upload_image(img_lab))
         self.main_page_contents.addWidget(write_mode)
@@ -249,6 +265,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
         if file_dialog.exec_():
             file_path = file_dialog.selectedFiles()[0]
+            print('사진 경로명: ', file_path)
             pixmap = QPixmap(file_path)
             img_lab.setPixmap(pixmap.scaled(img_lab.size(), aspectRatioMode=Qt.KeepAspectRatio))
 

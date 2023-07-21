@@ -37,7 +37,6 @@ class CWidget(QWidget, Ui_server_form):
         self.tableWidget_members.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # 열 자동정렬
 
         # 채팅창 부분
-        # TODO sendMsg 함수 연결 필요
         self.send_btn.clicked.connect(self.sendMsg)
 
     def toggleButton(self, state):

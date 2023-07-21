@@ -288,7 +288,7 @@ class Ui_MainWindow(object):
         self.main_page_contents = QtWidgets.QVBoxLayout()
         self.main_page_contents.setObjectName("main_page_contents")
         self.verticalLayout_9.addLayout(self.main_page_contents)
-        spacerItem13 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem13 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         self.verticalLayout_9.addItem(spacerItem13)
         self.verticalLayout_10.addWidget(self.widget_7)
         self.frame_3 = QtWidgets.QFrame(self.widget_5)
@@ -433,7 +433,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 42, 310))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 38, 331))
         self.scrollAreaWidgetContents.setStyleSheet("            QScrollBar:vertical {\n"
 "                background: transparent;\n"
 "                width: 15px;\n"

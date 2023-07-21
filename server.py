@@ -92,7 +92,7 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
                 msg = str(recv, encoding='utf-8')  # 수신 메세지를 utf-8 문자열로 만들고 - 부모 윈도우에 전달
                 if msg:
                     if msg.startswith('LOGIN_REQ'):  # 로그인 확인
-                        msg_ = msg.replace('LOGIN_REQ', '')
+                        msg_ = self.replace_msg(msg, 'LOGIN_REQ')
                         email = msg_.split(':')[0]
                         pw = msg_.split(':')[1]
                         self.login_req_signal.emit(email, pw, client)
@@ -104,27 +104,43 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
 
                     elif msg.startswith("SIGNUP_REQ"):  # 회원가입 확인
                         msg_ = msg.replace('SIGNUP_REQ', '').split(':')
-                        print('[server.py] 서버에서 받은 회원가입 확인 메세지: ', msg_)
                         user_nm, user_pw, user_num, user_email, user_r_date = msg_[0], msg_[1], msg_[2], msg_[3], msg_[
                             4]
                         self.signup_req_signal.emit(user_nm, user_pw, user_num, user_email,
                                                     user_r_date, client)
+
+                    elif msg.startswith('POST_REQ'): # 게시글 업로드
+                        # TODO 사진 받는 부분 필요함
+                        msg_ =  self.replace_msg(msg, 'POST_REQ')
+                        title, contents, img_path = msg_[0], msg_[1]
+
+                        print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
+                        print('!! 서버 확인용', title, contents, img_path)
+
+                        # file = open(f'{title}_img', 'wb')
+                        # img_chunk =
+
+
                     else:
                         # 채팅 부분
-                        msg_ = msg.split(chr(0)) # 메세지 구분자로 나눔
+                        msg_ = msg.split(chr(0))  # 메세지 구분자로 나눔
 
                         # DB에 저장
                         name_, chat_ = msg_[0], msg_[1]
-                        self.data.insert_chat_log(name_, msg_) # DB에 이름과 로그, 시간 삽입
+                        self.data.insert_chat_log(name_, msg_)  # DB에 이름과 로그, 시간 삽입
 
                         # 서버에 전달
                         self.send(name_, chat_)
                         self.recv_signal.emit(name_, chat_)  # 부모 윈도우에 전달하는 부분
                         print('[server.py]받은 메세지: ', addr, name_, chat_)
 
-
         # 이후 다시 무한 반복하며 recv() 함수를 호출해 다음 메세지 수신을 대기한다.
         self.removeClient(addr, client)
+
+
+    def replace_msg(self, msg, header):
+        """헤더 없애고 리턴"""
+        return msg.replace('header', '')
 
     def handle_login_request(self, email, password, client):
         # 로그인 요청 처리 구현

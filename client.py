@@ -10,6 +10,8 @@ class Signal(QObject):  # 소켓 클래스가 연결 끊김, 데이터 수신 �
     login_signal = pyqtSignal(str) # 로그인 시그널
     email_signal = pyqtSignal(str) # 이메일 확인 시그널
     register_signal = pyqtSignal(str, str, str, str, str) # 회원가입 시그널(이름, 이메일, 핸드폰번호, 비밀번호, 가입일자)
+    post_upload_signal = pyqtSignal(str, str, str) # 게시글 업로드 시그널
+
 
 class ClientSocket:
 
@@ -20,10 +22,12 @@ class ClientSocket:
         self.disconn = Signal()
         self.login = Signal()
         self.email = Signal()
+        self.post_upload = Signal()
         self.recv.recv_signal.connect(self.parent.updateMsg)
         self.disconn.disconn_signal.connect(self.parent.updateDisconnect)
         self.login.login_signal.connect(self.parent.receive_login)
         self.email.email_signal.connect(self.parent.receive_email)
+        self.post_upload.post_upload_signal.connect(self.parent.receive_upload_post)
 
 
         self.bConnect = False
@@ -81,14 +85,17 @@ class ClientSocket:
                 msg = str(recv, encoding='utf-8') # 인코딩
                 print('[client.py] 수신 타입', type(msg), '받은메세지', msg)
 
-                # 시그널 전달
+                # 로그인, 채팅 이외 시그널 전달
                 if msg in list(signal_dict.keys()):
                     signal_dict[msg](msg)
                     print('[client.py]', msg, '메세지')
+
+                # 로그인
                 elif msg.startswith('vaild_id'):
-                    print('로그인 정보 보내기######################')
                     # signal_dict['vaild_id'](msg)
                     self.login.login_signal.emit(msg)
+
+                # 채팅
                 else:
                     msg_ = msg.split(chr(0))
                     self.recv.recv_signal.emit(msg_[0], msg_[1])
@@ -115,6 +122,25 @@ class ClientSocket:
 
     def duplicate_check_request(self, username):
         self.client.duplicate_check_signal.emit(username)  # 로그인 중복 체크 요청 시그널 호출
+
+    # TODO 사진 전송 부분 넣어야 함
+    def post_upload_request(self, title, contents, img_path=None):
+
+        # 구분자로 나누어 제목, 내용을 보냄
+        s_ = chr(0)
+        self.client.send(f'POST_REQ{title}{s_}{contents}'.encode())
+
+        # 사진을 보냄
+        file = open(f'{img_path}', 'rb')
+        img_data = file.read(2048)
+
+        while img_data:
+            self.client.send(img_data)
+            img_data = file.read(2048)
+
+        file.close()
+        # self.client.close()
+
 
     def send(self, msg, name):  # 부모 윈도우의 '보내기'를 누르면 호출되는 함수.
         if not self.bConnect:

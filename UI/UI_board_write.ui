@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>702</width>
-    <height>400</height>
+    <height>380</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -84,8 +90,14 @@
         <x>0</x>
         <y>0</y>
         <width>700</width>
-        <height>398</height>
+        <height>378</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="leftMargin">
@@ -234,6 +246,9 @@
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
@@ -243,7 +258,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QTextEdit" name="contents_texteidt">
+              <widget class="QTextEdit" name="contents_textedit">
                <property name="placeholderText">
                 <string>여기에 작성글을 업로드하세요.</string>
                </property>
@@ -274,7 +289,7 @@
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>575</width>
+                 <width>40</width>
                  <height>20</height>
                 </size>
                </property>
