@@ -622,7 +622,7 @@
           <item>
            <widget class="QStackedWidget" name="sub_stackedwidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="content_page">
              <layout class="QHBoxLayout" name="horizontalLayout_12">
@@ -1280,8 +1280,8 @@ width: 0px;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>42</width>
-                              <height>310</height>
+                              <width>698</width>
+                              <height>331</height>
                              </rect>
                             </property>
                             <property name="styleSheet">
