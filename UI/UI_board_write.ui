@@ -147,6 +147,20 @@
               </spacer>
              </item>
              <item>
+              <widget class="QPushButton" name="del_btn">
+               <property name="text">
+                <string>삭제</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="edit_btn">
+               <property name="text">
+                <string>수정</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QPushButton" name="admit_btn">
                <property name="text">
                 <string>등록</string>

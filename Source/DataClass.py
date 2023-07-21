@@ -14,8 +14,9 @@ class DataClass:
     def connect_db(self):
         # self.conn = sqlite3.connect('../Data/data.db')
         # self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db") # 실습실 경로
-        # self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db") # 노트북 경로
-        self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
+        self.conn = sqlite3.connect(
+            "C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db")  # 노트북 경로
+        # self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
         self.cur = self.conn.cursor()
 
     def close_db(self):
@@ -65,12 +66,40 @@ class DataClass:
         """이메일이 존재하면 True값 반환"""
         self.connect_db()
         query = f'SELECT COUNT(*) FROM TB_USER WHERE USER_EMAIL = ?'
-        self.cur.execute(query, (email, ))
+        self.cur.execute(query, (email,))
         result = self.cur.fetchone()[0]
-        print('[dataclass.py] 결과값 확인', result, result>0)
+        print('[dataclass.py] 결과값 확인', result, result > 0)
         self.close_db()
 
         return result > 0
+
+    def return_datetime(self, type):
+        now = datetime.now()  # 시간
+        if type == 'date':
+            now_format = now.strftime("%Y-%m-%d")  # 년 월 일
+        elif type == 'time':
+            now_format = now.strftime("%Y-%m-%d %H:%M:%S")  # 년 월 일 시 분 초
+
+        print('[dateimte.py]시간 포멧팅: ', now_format)
+        return now_format
+
+    def insert_user_info(self, user_nm, email, pw, rdate, user_num):
+        """유저 정보 테이블에 회원정보를 기록합니다."""
+
+        # db 연결
+        self.connect_db()
+
+        # 회원 정보 저장
+        query = f"INSERT INTO TB_USER (USER_NAME, USER_EMAIL, USER_PW, USER_CREATE_DATE, USER_NUM) VALUES" \
+                f"(?, ?, ?, ?, ?)"
+        self.cur.execute(query, (user_nm, email, pw, rdate, user_num))
+
+        # db 저장 및 닫기
+        self.commit_db()
+        self.close_db()
+
+
+
 
     def insert_user_log(self, email):
         """유저 접속기록을 삽입합니다."""
@@ -81,12 +110,12 @@ class DataClass:
         # 조건
         c_ = f"USER_EMAIL = '{email}'"
         user_name = self.return_specific_data(table_name='TB_USER', column='USER_NAME', conditon=c_)  # 이름
-        now = datetime.now()  # 시간
-        now_format = now.strftime("%Y-%m-%d %H:%M:%S")  # 시간 포메팅
 
         # 데이터 삽입
         query = f"INSERT OR IGNORE INTO TB_LOG (USER_EMAIL, USER_NM, USER_LOGIN_TIME) VALUES (?, ?, ?)"
+        now_format = self.return_datetime('time')  # 현재 시간리턴
         print(email, user_name, now_format)
+
         self.cur.execute(query, (email, user_name, now_format))  # 유저 이메일, 이름, 접속시간 기록
         self.commit_db()  # 저장
         self.close_db()  # 닫아주기
@@ -144,14 +173,14 @@ class DataClass:
 
 
 if __name__ == '__main__':
-    d = DataClass()
-    # c_ = "BOARD_TITLE = '야너두할수있어'"
-    # result = d.return_specific_data(table_name='TB_NOTICE_BOARD',
-    #                        column='BOARD_CONTENTS',
-    #                        conditon=c_)
+    # d = DataClass()
+    # # c_ = "BOARD_TITLE = '야너두할수있어'"
+    # # result = d.return_specific_data(table_name='TB_NOTICE_BOARD',
+    # #                        column='BOARD_CONTENTS',
+    # #                        conditon=c_)
+    # # # print(result.values[0][0])
     # # print(result.values[0][0])
-    # print(result.values[0][0])
-    # a = d.check_user_email('admin')
-    # print(a)
+    # d.insert_user_info('소연', 'soyeon@soyeon.com', '1234', '2023-07-21', '111-111-1111')
+    # # print(a)
 
     pass

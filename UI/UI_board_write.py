@@ -82,6 +82,12 @@ class Ui_board_write_widget(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         spacerItem = QtWidgets.QSpacerItem(596, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
+        self.del_btn = QtWidgets.QPushButton(self.widget)
+        self.del_btn.setObjectName("del_btn")
+        self.horizontalLayout_2.addWidget(self.del_btn)
+        self.edit_btn = QtWidgets.QPushButton(self.widget)
+        self.edit_btn.setObjectName("edit_btn")
+        self.horizontalLayout_2.addWidget(self.edit_btn)
         self.admit_btn = QtWidgets.QPushButton(self.widget)
         self.admit_btn.setObjectName("admit_btn")
         self.horizontalLayout_2.addWidget(self.admit_btn)
@@ -135,6 +141,8 @@ class Ui_board_write_widget(object):
     def retranslateUi(self, board_write_widget):
         _translate = QtCore.QCoreApplication.translate
         board_write_widget.setWindowTitle(_translate("board_write_widget", "Form"))
+        self.del_btn.setText(_translate("board_write_widget", "삭제"))
+        self.edit_btn.setText(_translate("board_write_widget", "수정"))
         self.admit_btn.setText(_translate("board_write_widget", "등록"))
         self.title_lineedit.setPlaceholderText(_translate("board_write_widget", "제목을 입력해 주세요."))
         self.contents_texteidt.setPlaceholderText(_translate("board_write_widget", "여기에 작성글을 업로드하세요."))

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="leftMargin">
     <number>0</number>
@@ -73,7 +76,12 @@
          <property name="font">
           <font>
            <pointsize>30</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(47, 128, 237);</string>
          </property>
          <property name="text">
           <string>Server setting</string>
@@ -86,6 +94,9 @@
           <font>
            <pointsize>14</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(47, 128, 237);</string>
          </property>
          <property name="text">
           <string>HOST_IP</string>
@@ -118,6 +129,9 @@
            <pointsize>14</pointsize>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(47, 128, 237);</string>
+         </property>
          <property name="text">
           <string>접속자 정보</string>
          </property>
@@ -133,6 +147,11 @@
            <width>0</width>
            <height>28</height>
           </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius:7px;</string>
          </property>
          <property name="text">
           <string>전송</string>
@@ -160,10 +179,18 @@
            <height>40</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">border-radius:7px;
+border: 2px solid #2F80ED;</string>
+         </property>
         </widget>
        </item>
        <item row="4" column="0" rowspan="3">
         <widget class="QTableWidget" name="tableWidget_members">
+         <property name="styleSheet">
+          <string notr="true">border-radius:7px;
+border: 2px solid #2F80ED;</string>
+         </property>
          <column>
           <property name="text">
            <string>IP</string>
@@ -183,6 +210,9 @@
            <pointsize>14</pointsize>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(47, 128, 237);</string>
+         </property>
          <property name="text">
           <string>HOST_PORT</string>
          </property>
@@ -196,6 +226,10 @@
            <height>40</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">border-radius:7px;
+border: 2px solid #2F80ED;</string>
+         </property>
         </widget>
        </item>
        <item row="2" column="3">
@@ -205,6 +239,11 @@
            <width>124</width>
            <height>40</height>
           </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius:7px;</string>
          </property>
          <property name="text">
           <string>서버 실행</string>
@@ -222,6 +261,10 @@
            <height>28</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">border-radius:7px;
+border: 2px solid #2F80ED;</string>
+         </property>
         </widget>
        </item>
        <item row="3" column="2">
@@ -230,6 +273,9 @@
           <font>
            <pointsize>14</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(47, 128, 237);</string>
          </property>
          <property name="text">
           <string>채팅 공지 알림</string>
@@ -246,6 +292,10 @@
            <width>0</width>
            <height>220</height>
           </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-radius:7px;
+border: 2px solid #2F80ED;</string>
          </property>
         </widget>
        </item>
