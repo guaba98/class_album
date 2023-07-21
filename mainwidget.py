@@ -19,6 +19,7 @@ import client
 class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
+
         self.setupUi(self)
 
         # 객체 생성
@@ -36,19 +37,20 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.ip = '192.168.56.1'  # 임시지정
         self.port = 1121
         self.login_state = None
+        self.user_name = None
 
         # 함수 연결
         self.connectClicked()
         self.add_post()  # 글 내용 리스트 추가
         self.event_connect()  # 클릭 시그널 연결
         self.init_UI()  # 초기설정(카테고리 버튼 추가 등)
-        self.var_init()
-
+        # self.var_init() # 변수
 
     # -- 변수
-    def var_init(self):
-        """변수 들어가는 함수"""
-        self.login_state = False
+    # def var_init(self):
+    #     """변수 들어가는 함수"""
+    #     self.login_state = False
+    #     self.user_name = None
 
     # -- 버튼 시그널 발생 모음
     def event_connect(self):
@@ -92,20 +94,26 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         """연결 끊겼을 때 클라이언트 소켓을 멈춘다."""
         self.c.stop()
 
-    def updateMsg(self, msg):
+    def updateMsg(self, name, msg):
         """메세지 박스로 메세지 내용을 추가한다. """
-        self.chat_main_contents.addWidget(MsgBox(msg, send_time='10:10', parent=None))
-        print('[mainwidget.py] 업데이트된 메세지: ', msg)
+
+        self.data.insert_chat_log(name, msg)
+        log = f'{name}: {msg}'
+        self.chat_main_contents.addWidget(MsgBox(log, send_time=None, parent=None))
+        print('[mainwidget.py] 업데이트된 메세지: ', log)
 
     def updateDisconnect(self):
         print('[mainwidget.py] 접속')
 
-    # -- 서버에 요청
+        # -- 서버에 요청
+
     def sendMsg(self):
         if self.login_state:
             sendmsg = self.chat_lineedit.text()
-            self.c.send(sendmsg)
-            print('[mainwidget.py] 내가 보낸 메세지: ', sendmsg)
+            # TODO 사용자의 이름을 넣는 부분 체크
+            # name =
+            self.c.send(msg=sendmsg, name=self.user_name)
+            print('[mainwidget.py] 내가 보낸 메세지: ', self.user_name, sendmsg)
         else:
             self.dig_warning.set_dialog_type(1, t_type='unable_chat')  # 회원만 채팅이 가능함
             self.dig_warning.exec_()
@@ -134,32 +142,24 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         # 이메일 중복 확인
         self.sendDbEmail(email)
 
-        # 회원가입 가능할 때 다이얼로그 띄우기 및 DB 저장
-        self.show_dialog_window(1, 'register_cmplt')
-        date_ = self.data.return_datetime('date')
-
-        # 회원가입 연결
-        self.c.register_request(username=name, password=password,
-                                user_num=cell_num, email=email, r_date=date_)
-
-        # 회원가입 연결 후 로그인 창으로 이동
-        self.stackedWidget.setCurrentWidget(self.login_page)
-
-    def show_dialog_window(self, num, type):
+    def show_dialog_window(self, num, type, txt=None):
         """경고 팝업창 단순화 시키기"""
-        self.dig_warning.set_dialog_type(num, t_type=type)
+        self.dig_warning.set_dialog_type(num, t_type=type, text=txt)
         self.dig_warning.exec_()
 
     # -- 서버에서 정보 받는 부분
     def receive_login(self, msg):
         """여기에 팝업화면을 보여줍니다."""
         print('[mainwidget.py] 로그인 리턴값: ', msg)
+
         if msg != 'rejcet_login':
-            self.dig_warning.set_dialog_type(bt_cnt=1, text=f'로그인 완료!')
+            user_nm = msg.replace('vaild_id', "")
+            self.user_name = user_nm  # 유저 이름
+            self.dig_warning.set_dialog_type(bt_cnt=1, text=f'{user_nm}님 로그인 완료!')
+            self.dig_warning.exec_()
             self.login_state = True  # 로그인 여부
-            if self.dig_warning.exec_():
-                self.stackedWidget.setCurrentWidget(self.main_page)  # 로그인 시 메인 페이지로 이동
-                # TODO 여기에 로그인 기록 db에 저장되는 부분 추가, 로그인 되면 로그인 회원가입 창이 안 뜨고 로그아웃 할 수 있는 부분 추가
+            self.stackedWidget.setCurrentWidget(self.main_page)  # 로그인 시 메인 페이지로 이동
+            #  로그인 되면 로그인 회원가입 창이 안 뜨고 로그아웃 할 수 있는 부분 추가
         else:
             self.dig_warning.set_dialog_type(bt_cnt=1, t_type='reject_login')
             self.dig_warning.exec_()
@@ -169,9 +169,24 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         print('[mainwidget.py] receive_email 함수 ', email)
         if email != 'avlbl_email':
             self.show_dialog_window(1, 'used_email')
+        else:
+            # 회원가입 가능할 때 다이얼로그 띄우기 및 DB 저장
+            self.show_dialog_window(1, 'register_cmplt')
+            date_ = self.data.return_datetime('date')
 
+            # 이름, 이메일, 핸드폰 번호, 비밀번호
+            name, email_, cell_num, password = \
+                self.register_name_lineedit.text(), self.register_email_lineedit.text(), self.register_cellphone_num_lineedit.text(), self.register_password_lineedit.text()
+
+            # 회원가입 연결
+            self.c.register_request(username=name, password=password,
+                                    user_num=cell_num, email=email_, r_date=date_)
+
+            # 회원가입 연결 후 로그인 창으로 이동
+            self.stackedWidget.setCurrentWidget(self.login_page)
 
     # 회원가입 유효성 체크 ###################################################
+
     # -- 회원가입 유효성 체크 부분(메인에서 할 수 있는 부분)
     def validate_register_form(self, name, email, cell_num, password):
         """회원가입 유효성 여부를 체크"""
@@ -214,7 +229,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
     def clearMsg(self):
         self.chat_lineedit.clear()
-
 
     # 글 작성 및 읽기 부분 ###########################################################
 
@@ -303,10 +317,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         """댓글 작성하는 부분"""
         pass
 
-
-
-
-
     # -- ui 관련 부분 #################################################
     def move_paging(self, btn_txt):
         """선택한 버튼에 따라 페이지를 이동시킨다."""
@@ -315,6 +325,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         #
         # }
         print(btn_txt)
+
     def init_UI(self):
         """기본으로 들어갈 ui를 설정합니다."""
         # 카테고리 버튼 왼쪽에 추가

@@ -75,6 +75,8 @@ class DialogWarning(QDialog, Ui_Dialog):
             self.warning_lab.setText('회원만 채팅이 가능합니다.')
         elif t_type == 'register_cmplt':
             self.warning_lab.setText('회원가입이 완료되었습니다.\n로그인 해 주세요!')
+        elif t_type == 'server_off':
+            self.warning_lab.setText('서버가 켜지지 않았습니다.')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
