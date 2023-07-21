@@ -37,7 +37,6 @@ class CWidget(QWidget, Ui_server_form):
         self.tableWidget_members.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)  # 열 자동정렬
 
         # 채팅창 부분
-        # TODO sendMsg 함수 연결 필요
         self.send_btn.clicked.connect(self.sendMsg)
 
     def toggleButton(self, state):
@@ -67,14 +66,14 @@ class CWidget(QWidget, Ui_server_form):
                     self.tableWidget_members.removeRow(r)
                     break
 
-    def updateMsg(self, msg):
-        print('[server_window.py]클라이언트에서 받은 메세지: ', msg)
+    def updateMsg(self, name, msg):
+        print('[server_window.py]클라이언트에서 받은 메세지: ', name, msg)
         if msg.startswith('LOGIN_REQ'):
             msg_ = msg.replace('LOGIN_REQ', '')
             email = msg_.split(':')[0]
             self.chat_listwidget.addItem(QListWidgetItem(f'{email}님 로그인 시도'))
         else:
-            self.chat_listwidget.addItem(QListWidgetItem(msg))
+            self.chat_listwidget.addItem(QListWidgetItem(name+msg))
             self.chat_listwidget.setCurrentRow(self.chat_listwidget.count() - 1)
 
     # def handle_login_request(self, id, pw):

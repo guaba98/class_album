@@ -19,8 +19,10 @@ import client
 class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
+
         self.setupUi(self)
 
+        # 객체 생성
         self.data = DataClass()
         self.dig_warning = DialogWarning()
         self.c = client.ClientSocket(self)  # 클라이언트 소켓 생성
@@ -31,15 +33,42 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         노트북 ip: 172.16.2.73
         '''
 
-        self.ip = '172.16.2.73'  # 임시지정
+        # ip, port 지정
+        self.ip = '192.168.56.1'  # 임시지정
         self.port = 1121
-        self.login_state = False
+        self.login_state = None
+        self.user_name = None
+
+        # 함수 연결
         self.connectClicked()
         self.add_post()  # 글 내용 리스트 추가
         self.event_connect()  # 클릭 시그널 연결
-        self.init_UI()  # 카테고리 버튼 추가
-        # self.var_init()
-        self.register_cellphone_num_lineedit.setInputMask('000-0000-0000;_')
+        self.init_UI()  # 초기설정(카테고리 버튼 추가 등)
+        # self.var_init() # 변수
+
+
+
+    # -- 변수
+    # def var_init(self):
+    #     """변수 들어가는 함수"""
+    #     self.login_state = False
+    #     self.user_name = None
+
+
+    # TODO 여기서 사진을 클라이언트 -> 서버 -> DB 저장 및 사진 경로 저장
+    #  -> 메인윈도우 레이아웃 객체 추가 하는 부분까지 연결
+    def send_save_post(self, title, contents, img_path=None):
+        print('[mainwindow.py] 사진 저장 테스트 중')
+        print(title, contents, img_path)
+        self.c.post_upload_request(title=title, contents=contents, img_path=img_path)
+
+    # TODO 이 함수에서는 서버에서 정보들을 받아서 레이아웃에 객체들을 넣어주는 역할을 함.
+    def receive_upload_post(self,title, contents, img_path ):
+        pass
+
+
+
+
 
     # -- 버튼 시그널 발생 모음
     def event_connect(self):
@@ -57,12 +86,14 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
         # 시그널 연결
         self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
-        self.chat_lineedit.returnPressed.connect(self.sendMsg) # 메세지 보내기(엔터)
+        self.chat_lineedit.returnPressed.connect(self.sendMsg)  # 메세지 보내기(엔터)
         self.login_start_btn.clicked.connect(self.sendLogin)  # 로그인 확인
-        self.register_admit_btn.clicked.connect(self.sendRegister)
+        self.register_admit_btn.clicked.connect(self.sendRegister)  # 회원가입 유효성 확인 -> 회원가입
 
+    ## 네트워크 #################################################################
     # -- 네트워크 관련
     def connectClicked(self):
+        """연결 상태 확인하는 함수"""
         if not self.c.bConnect:
             ip = self.ip
             port = self.port
@@ -78,97 +109,126 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             print('[메인] 접속')
 
     def __del__(self):
+        """연결 끊겼을 때 클라이언트 소켓을 멈춘다."""
         self.c.stop()
 
-    def updateMsg(self, msg):
-        # 여기에 메세지 추가하는 부분 넣기(클래스화)
-        self.chat_main_contents.addWidget(MsgBox(msg, send_time='10:10', parent=None))
-        print('[mainwidget.py] 업데이트된 메세지: ', msg)
+    def updateMsg(self, name, msg):
+        """메세지 박스로 메세지 내용을 추가한다. """
 
-    # 0720 제작중
-    def login(self, msg):
-        """여기에 팝업화면을 보여줍니다."""
-        print('[mainwidget.py] 로그인 리턴값: ', msg)
-        if msg != 'rejcet_login':
-            self.dig_warning.set_dialog_type(bt_cnt=1, text=f'{msg}님 로그인 완료!')
-            self.login_state = True  # 로그인 여부
-            if self.dig_warning.exec_():
-                self.stackedWidget.setCurrentWidget(self.main_page)  # 로그인 시 메인 페이지로 이동
-                # TODO 여기에 로그인 기록 db에 저장되는 부분 추가, 로그인 되면 로그인 회원가입 창이 안 뜨고 로그아웃 할 수 있는 부분 추가
-        else:
-            self.dig_warning.set_dialog_type(bt_cnt=1, t_type='reject_login')
-            self.dig_warning.exec_()
+        self.data.insert_chat_log(name, msg)
+        log = f'{name}: {msg}'
+        self.chat_main_contents.addWidget(MsgBox(log, send_time=None, parent=None))
+        print('[mainwidget.py] 업데이트된 메세지: ', log)
 
     def updateDisconnect(self):
         print('[mainwidget.py] 접속')
 
+        # -- 서버에 요청
+
     def sendMsg(self):
         if self.login_state:
             sendmsg = self.chat_lineedit.text()
-            self.c.send(sendmsg)
-            self.chat_lineedit.clear()
-            print('[mainwidget.py] 내가 보낸 메세지: ', sendmsg)
+            self.c.send(msg=sendmsg, name=self.user_name)
+            print('[mainwidget.py] 내가 보낸 메세지: ', self.user_name, sendmsg)
         else:
-            self.dig_warning.set_dialog_type(1, t_type='unable_chat') # 회원만 채팅이 가능함
+            self.dig_warning.set_dialog_type(1, t_type='unable_chat')  # 회원만 채팅이 가능함
             self.dig_warning.exec_()
-            self.chat_lineedit.clear()
+        self.chat_lineedit.clear()
 
-
-    # 하는중 하는중 하는중
     def sendLogin(self):
         email = self.email_lineedit.text()
         password = self.password_lineedit.text()
         self.c.login_request(email, password)
 
+    def sendDbEmail(self, email):
+        """이메일 전송(클라이언트 소켓으로)"""
+        self.c.check_vaild_email(email)
+
     def sendRegister(self):
-        name = self.register_name_lineedit.text()
-        email = self.register_email_lineedit.text()
-        cell_num = self.register_cellphone_num_lineedit.text()
-        password = self.register_password_lineedit.text()
-        print(f'이름:{name}, 이메일:{email}, 핸드폰:{cell_num}, 비번:{password}')
-        cnt = 0
-        if name == '':
-            self.dig_warning.set_dialog_type(1, t_type='name_input')
-            self.dig_warning.exec_()
+        """회원가입 요청 하는 부분"""
+
+        # 이름, 이메일, 핸드폰 번호, 비밀번호
+        name, email, cell_num, password = \
+            self.register_name_lineedit.text(), self.register_email_lineedit.text(), self.register_cellphone_num_lineedit.text(), self.register_password_lineedit.text()
+
+        # 유효성 체크
+        if not self.validate_register_form(name, email, cell_num, password):
             return
-        elif email == '':
-            self.dig_warning.set_dialog_type(1, t_type='email_input')
+
+        # 이메일 중복 확인
+        self.sendDbEmail(email)
+
+    def show_dialog_window(self, num, type, txt=None):
+        """경고 팝업창 단순화 시키기"""
+        self.dig_warning.set_dialog_type(num, t_type=type, text=txt)
+        self.dig_warning.exec_()
+
+    # -- 서버에서 정보 받는 부분
+    def receive_login(self, msg):
+        """여기에 팝업화면을 보여줍니다."""
+        print('[mainwidget.py] 로그인 리턴값: ', msg)
+
+        if msg != 'rejcet_login':
+            user_nm = msg.replace('vaild_id', "")
+            self.user_name = user_nm  # 유저 이름
+            self.dig_warning.set_dialog_type(bt_cnt=1, text=f'{user_nm}님 로그인 완료!')
             self.dig_warning.exec_()
-            return
+            self.login_state = True  # 로그인 여부
+            self.stackedWidget.setCurrentWidget(self.main_page)  # 로그인 시 메인 페이지로 이동
+            #  로그인 되면 로그인 회원가입 창이 안 뜨고 로그아웃 할 수 있는 부분 추가
+        else:
+            self.dig_warning.set_dialog_type(bt_cnt=1, t_type='reject_login')
+            self.dig_warning.exec_()
+
+    def receive_email(self, email):
+        """이메일이 존재하는지 리턴값을 받습니다."""
+        print('[mainwidget.py] receive_email 함수 ', email)
+        if email != 'avlbl_email':
+            self.show_dialog_window(1, 'used_email')
+        else:
+            # 회원가입 가능할 때 다이얼로그 띄우기 및 DB 저장
+            self.show_dialog_window(1, 'register_cmplt')
+            date_ = self.data.return_datetime('date')
+
+            # 이름, 이메일, 핸드폰 번호, 비밀번호
+            name, email_, cell_num, password = \
+                self.register_name_lineedit.text(), self.register_email_lineedit.text(), self.register_cellphone_num_lineedit.text(), self.register_password_lineedit.text()
+
+            # 회원가입 연결
+            self.c.register_request(username=name, password=password,
+                                    user_num=cell_num, email=email_, r_date=date_)
+
+            # 회원가입 연결 후 로그인 창으로 이동
+            self.stackedWidget.setCurrentWidget(self.login_page)
+
+    # 회원가입 유효성 체크 ###################################################
+
+    # -- 회원가입 유효성 체크 부분(메인에서 할 수 있는 부분)
+    def validate_register_form(self, name, email, cell_num, password):
+        """회원가입 유효성 여부를 체크"""
+        print(f'이름:{name}, 이메일:{email}, 핸드폰:{cell_num}, 비번:{password}')  # 확인용
+        if not name:
+            self.show_dialog_window(1, 'name_input')
+            return False
+        elif not email:
+            self.show_dialog_window(1, 'email_input')
+            return False
         elif cell_num == '--':
-            self.dig_warning.set_dialog_type(1, t_type='cell_num_input')
-            self.dig_warning.exec_()
-            return
-        elif password == '':
-            self.dig_warning.set_dialog_type(1, t_type='pw_input')
-            self.dig_warning.exec_()
-            return
-
-        if self.check_valid_email(email):
-            cnt += 1
-        else:
-            self.dig_warning.set_dialog_type(1, t_type='not_valid_email')
-            self.dig_warning.exec_()
-            return
-
-        if not self.data.check_user_email(email):  # 이메일 존재하는지 확인 -> 이 부분은 서버로 연결해야 함. 체크체크
-            cnt += 1
-        else:
-            self.dig_warning.set_dialog_type(1, t_type='used_email')
-            self.dig_warning.exec_()
-            return
-
-        if self.check_password_recheck():  # 비밀번호 동일한지 확인
-            cnt += 1
-        else:
-            self.dig_warning.set_dialog_type(1, t_type='pw_recheck')
-            self.dig_warning.exec_()
-            return
-        if cnt == 3:
-            print('회원가입 가능!') # ->여기서 회원가입 되면 서버에 db 저장하는 부분 연결해야 함. 체크체크
-
+            self.show_dialog_window(1, 'cell_num_input')
+            return False
+        elif not password:
+            self.show_dialog_window(1, 'pw_input')
+            return False
+        elif not self.check_valid_email(email):
+            self.show_dialog_window(1, 'not_valid_email')
+            return False
+        elif not self.check_password_recheck():
+            self.show_dialog_window(1, 'pw_recheck')
+            return False
+        return True
 
     def check_valid_email(self, email):
+        """이메일 특수문자 확인"""
         list_ = ['@', '.']
         for i in list_:
             if i not in email:
@@ -186,11 +246,13 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def clearMsg(self):
         self.chat_lineedit.clear()
 
-    # == 글 작성 부분
+    # 글 작성 및 읽기 부분 ###########################################################
+
+    # -- 글 작성 부분
     def write_contents(self):
         """글 쓰기 눌렀을 때 발생하는 이벤트 모음"""
         self.clear_layout(self.main_page_contents)  # 레이아웃 지워주고
-        write_mode = BoardWrite()
+        write_mode = BoardWrite(self)
         # img_btn, img_lab = write_mode.r_img_upload_btn()
         # img_btn.clicked.connect(self.upload_image(img_lab))
         self.main_page_contents.addWidget(write_mode)
@@ -203,73 +265,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
         if file_dialog.exec_():
             file_path = file_dialog.selectedFiles()[0]
+            print('사진 경로명: ', file_path)
             pixmap = QPixmap(file_path)
             img_lab.setPixmap(pixmap.scaled(img_lab.size(), aspectRatioMode=Qt.KeepAspectRatio))
-
-    # == ui 기본값 넣기
-    # 카테고리 버튼
-    def init_UI(self):
-        """기본으로 들어갈 ui를 설정합니다."""
-        # 카테고리 버튼 왼쪽에 추가
-        for category in ['home', 'login', 'register', 'messenger']:  # 홈버튼, 로그인버튼, 회원가입 버튼
-            image_path = f'./img/ui_img/{category}.png'
-            new_category = Category(image_path, category, self)
-            self.main_category.addWidget(new_category)
-            if category == 'home':
-                new_category.change_backgrond_color()
-
-        self.make_arrow_button(self.c_df_cnt)  # 화살표 번호 생성
-        self.reply_lineedit.hide()
-        self.reply_btn.hide()
-
-    # 화살표 버튼
-    def make_arrow_button(self, cnt):
-        # 화살표 버튼 생성하기
-        arrow_list = ['<<', '<', '>', '>>']
-
-        # 버튼 생성
-        for i in arrow_list[:2]:
-            btn = PageBtn(txt=f'{i}', parent=self)
-            self.main_paging.addWidget(btn.btn_return)
-        for i in range(1, cnt):
-            btn = PageBtn(txt=f'{i}', parent=self)
-            self.main_paging.addWidget(btn.btn_return)
-        for i in arrow_list[2:]:
-            btn = PageBtn(txt=f'{i}', parent=self)
-            self.main_paging.addWidget(btn.btn_return)
-
-    # -- 페이지 이동 부분
-    def move_paging(self, btn_txt):
-        """선택한 버튼에 따라 페이지를 이동시킨다."""
-        # btn_move_dict = {
-        #     '<'
-        #
-        # }
-        print(btn_txt)
-
-    def move_page(self, c_name):
-        """스택위젯 페이지 이동"""
-        pages_dict = {
-            'home': self.content_page,
-            'login': self.login_page,
-            'register': self.register_page,
-            'messenger': self.chat_page
-        }
-        if c_name == 'home':
-            self.clear_layout(self.main_page_contents)
-            self.clear_layout(self.main_paging)
-            self.active_btn(True)
-            self.add_post()
-
-        # 여기에 리스트위젯 추가하는 부분
-        if c_name in ['register', 'login']:
-            self.stackedWidget.setCurrentWidget(pages_dict[c_name])
-        else:
-            self.sub_stackedwidget.setCurrentWidget(pages_dict[c_name])
-
-    def write_reply(self):
-        """댓글 작성하는 부분"""
-        pass
 
     # -- 글 읽기 부분
     def move_to_contents(self, number, title, writer, write_date):
@@ -310,6 +308,71 @@ class MainWidget(QMainWindow, Ui_MainWindow):
                                    write_date=write_date, parent=self)
             sample_list.set_contents_bar()
             self.main_page_contents.addWidget(sample_list)
+
+    def move_page(self, c_name):
+        """스택위젯 페이지 이동"""
+        pages_dict = {
+            'home': self.content_page,
+            'login': self.login_page,
+            'register': self.register_page,
+            'messenger': self.chat_page
+        }
+        if c_name == 'home':
+            self.clear_layout(self.main_page_contents)
+            self.clear_layout(self.main_paging)
+            self.active_btn(True)
+            self.add_post()
+
+        # 여기에 리스트위젯 추가하는 부분
+        if c_name in ['register', 'login']:
+            self.stackedWidget.setCurrentWidget(pages_dict[c_name])
+        else:
+            self.sub_stackedwidget.setCurrentWidget(pages_dict[c_name])
+
+    # -- 댓글 작성
+    def write_reply(self):
+        """댓글 작성하는 부분"""
+        pass
+
+    # -- ui 관련 부분 #################################################
+    def move_paging(self, btn_txt):
+        """선택한 버튼에 따라 페이지를 이동시킨다."""
+        # btn_move_dict = {
+        #     '<'
+        #
+        # }
+        print(btn_txt)
+
+    def init_UI(self):
+        """기본으로 들어갈 ui를 설정합니다."""
+        # 카테고리 버튼 왼쪽에 추가
+        for category in ['home', 'login', 'register', 'messenger']:  # 홈버튼, 로그인버튼, 회원가입 버튼
+            image_path = f'./img/ui_img/{category}.png'
+            new_category = Category(image_path, category, self)
+            self.main_category.addWidget(new_category)
+            if category == 'home':
+                new_category.change_backgrond_color()
+
+        self.make_arrow_button(self.c_df_cnt)  # 화살표 번호 생성
+        self.reply_lineedit.hide()
+        self.reply_btn.hide()
+        self.register_cellphone_num_lineedit.setInputMask('000-0000-0000;_')
+
+    # 화살표 버튼
+    def make_arrow_button(self, cnt):
+        # 화살표 버튼 생성하기
+        arrow_list = ['<<', '<', '>', '>>']
+
+        # 버튼 생성
+        for i in arrow_list[:2]:
+            btn = PageBtn(txt=f'{i}', parent=self)
+            self.main_paging.addWidget(btn.btn_return)
+        for i in range(1, cnt):
+            btn = PageBtn(txt=f'{i}', parent=self)
+            self.main_paging.addWidget(btn.btn_return)
+        for i in arrow_list[2:]:
+            btn = PageBtn(txt=f'{i}', parent=self)
+            self.main_paging.addWidget(btn.btn_return)
 
     def active_btn(self, type):
         if type:

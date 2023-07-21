@@ -622,7 +622,7 @@
           <item>
            <widget class="QStackedWidget" name="sub_stackedwidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="content_page">
              <layout class="QHBoxLayout" name="horizontalLayout_12">
@@ -821,6 +821,9 @@
                           <spacer name="verticalSpacer_8">
                            <property name="orientation">
                             <enum>Qt::Vertical</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Preferred</enum>
                            </property>
                            <property name="sizeHint" stdset="0">
                             <size>
@@ -1280,7 +1283,7 @@ width: 0px;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>698</width>
+                              <width>38</width>
                               <height>331</height>
                              </rect>
                             </property>
