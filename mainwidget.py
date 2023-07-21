@@ -29,12 +29,13 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
         '''
         컴퓨터 ip : 192.168.56.1
-        컴퓨터 자리 고정 ip : 10.10.20.103
+        실습실 자리 고정 ip : 10.10.20.103
         노트북 ip: 172.16.2.73
+        기숙사 독서실 ip: 192.168.0.88
         '''
 
         # ip, port 지정
-        self.ip = '192.168.56.1'  # 임시지정
+        self.ip = '192.168.0.88'  # 임시지정
         self.port = 1121
         self.login_state = None
         self.user_name = None

@@ -2,15 +2,16 @@ from threading import *
 from socket import *
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
 from Source.dig_warning import DialogWarning
+import base64
 
 
 class Signal(QObject):  # 소켓 클래스가 연결 끊김, 데이터 수신 시그널 발생 시 window.py 파일이 생성하는 윈도우 창으로 사용자 정의 시그널 보내기 위함
     recv_signal = pyqtSignal(str, str)  # 메세지 받는 시그널
     disconn_signal = pyqtSignal()  # 연결 끊는 시그널
-    login_signal = pyqtSignal(str) # 로그인 시그널
-    email_signal = pyqtSignal(str) # 이메일 확인 시그널
-    register_signal = pyqtSignal(str, str, str, str, str) # 회원가입 시그널(이름, 이메일, 핸드폰번호, 비밀번호, 가입일자)
-    post_upload_signal = pyqtSignal(str, str, str) # 게시글 업로드 시그널
+    login_signal = pyqtSignal(str)  # 로그인 시그널
+    email_signal = pyqtSignal(str)  # 이메일 확인 시그널
+    register_signal = pyqtSignal(str, str, str, str, str)  # 회원가입 시그널(이름, 이메일, 핸드폰번호, 비밀번호, 가입일자)
+    post_upload_signal = pyqtSignal(str, str, str)  # 게시글 업로드 시그널
 
 
 class ClientSocket:
@@ -28,7 +29,6 @@ class ClientSocket:
         self.login.login_signal.connect(self.parent.receive_login)
         self.email.email_signal.connect(self.parent.receive_email)
         self.post_upload.post_upload_signal.connect(self.parent.receive_upload_post)
-
 
         self.bConnect = False
         self.dialog = DialogWarning()
@@ -82,7 +82,7 @@ class ClientSocket:
                 print('Recv() Error :', e)
                 break
             else:
-                msg = str(recv, encoding='utf-8') # 인코딩
+                msg = str(recv, encoding='utf-8')  # 인코딩
                 print('[client.py] 수신 타입', type(msg), '받은메세지', msg)
 
                 # 로그인, 채팅 이외 시그널 전달
@@ -126,20 +126,34 @@ class ClientSocket:
     # TODO 사진 전송 부분 넣어야 함
     def post_upload_request(self, title, contents, img_path=None):
 
+        # # 구분자로 나누어 제목, 내용을 보냄
+        # s_ = chr(0)
+        # self.client.send(f'POST_REQ{title}{s_}{contents}{s_}{img_path}'.encode())
+        #
+        # # 사진을 보냄
+        # file = open(f'{img_path}', 'rb')
+        # img_data = file.read(2048)
+        #
+        # while img_data:
+        #     self.client.send(img_data)
+        #     img_data = file.read(2048)
+
+        # file.close()
+        # self.client.close()
         # 구분자로 나누어 제목, 내용을 보냄
         s_ = chr(0)
-        self.client.send(f'POST_REQ{title}{s_}{contents}'.encode())
 
         # 사진을 보냄
-        file = open(f'{img_path}', 'rb')
-        img_data = file.read(2048)
+        with open(img_path, 'rb') as f:
+            img_data = f.read()
 
-        while img_data:
-            self.client.send(img_data)
-            img_data = file.read(2048)
+        title_bytes = title.encode('utf-8')
+        contents_bytes = contents.encode('utf-8')
+        message = title_bytes + s_.encode() + contents_bytes + s_.encode() + img_data
+        self.client.sendall(message)
 
-        file.close()
-        # self.client.close()
+
+        # 클라이언트 여기서 닫아야 되나?
 
 
     def send(self, msg, name):  # 부모 윈도우의 '보내기'를 누르면 호출되는 함수.

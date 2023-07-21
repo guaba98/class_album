@@ -1,5 +1,6 @@
 from threading import Thread  # 파이썬 모듈 불러오기
 from socket import *
+import base64
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
 from Source.DataClass import DataClass
 from Source.dig_warning import DialogWarning
@@ -81,6 +82,45 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         self.removeAllClients()
         self.server.close()
 
+    # def receive(self, addr, client):
+    #     data = b''
+    #     while True:
+    #         try:
+    #             recv = client.recv(1024)
+    #             print('여길 타나요 00', recv)
+    #         except Exception as e:
+    #             print('Recv() Error:', e)
+    #             break
+    #         else:
+    #             if not recv:  # If no data received, client closed the connection
+    #                 break
+    #
+    #             # Append the received data to the existing data
+    #             data += recv
+    #             print('여길 타나요 01', data)
+    #             msg = data.encode()
+    #             if msg.startswith("b'LOGIN_REQ'"):  # 로그인 확인
+    #                 print('여길 타나요3333')
+    #             # Check if we have received the complete message (assuming it ends with a newline character)
+    #             if b'\n' in data:
+    #                 print('여길 타나요1')
+    #                 # Split the data into individual messages based on the newline character
+    #                 messages = data.split(b'\n')
+    #                 # The last message might be incomplete, so we keep it for the next iteration
+    #                 data = messages[-1]
+    #
+    #                 # Process complete messages
+    #                 for msg in messages[:-1]:
+    #                     print('여길 타나요2')
+    #                     msg = recv.decode('utf-8')
+    #                     if msg.startswith("b'LOGIN_REQ'"):  # 로그인 확인
+    #                         print('여길 타나요3')
+    #                         msg_ = self.replace_msg(msg.decode('utf-8'), 'LOGIN_REQ', ':')
+    #                         print(msg_)
+    #                         email, pw = msg_[0], msg_[1]
+    #                         self.login_req_signal.emit(email, pw, client)
+
+                        # Add other message type handlers as needed...
     def receive(self, addr, client):  # 클라이언트드가 접속할 때마다 생성되는 쓰레드에 의해 실행되는 함수
         while True:
             try:
@@ -92,9 +132,9 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
                 msg = str(recv, encoding='utf-8')  # 수신 메세지를 utf-8 문자열로 만들고 - 부모 윈도우에 전달
                 if msg:
                     if msg.startswith('LOGIN_REQ'):  # 로그인 확인
-                        msg_ = self.replace_msg(msg, 'LOGIN_REQ')
-                        email = msg_.split(':')[0]
-                        pw = msg_.split(':')[1]
+                        msg_ = self.replace_msg(msg, 'LOGIN_REQ', ":")
+                        email = msg_[0]
+                        pw = msg_[1]
                         self.login_req_signal.emit(email, pw, client)
 
                     elif msg.startswith('CHECK_EMAIL'):  # 이메일 중복 확인
@@ -111,7 +151,7 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
 
                     elif msg.startswith('POST_REQ'): # 게시글 업로드
                         # TODO 사진 받는 부분 필요함
-                        msg_ =  self.replace_msg(msg, 'POST_REQ')
+                        msg_ =  self.replace_msg(msg, 'POST_REQ', chr(0))
                         title, contents, img_path = msg_[0], msg_[1]
 
                         print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
@@ -137,10 +177,10 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         # 이후 다시 무한 반복하며 recv() 함수를 호출해 다음 메세지 수신을 대기한다.
         self.removeClient(addr, client)
 
-
-    def replace_msg(self, msg, header):
+    def replace_msg(self, msg, header, split):
         """헤더 없애고 리턴"""
-        return msg.replace('header', '')
+        msg = msg.replace(header, "").split(split)
+        return msg
 
     def handle_login_request(self, email, password, client):
         # 로그인 요청 처리 구현

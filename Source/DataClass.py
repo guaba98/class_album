@@ -16,9 +16,9 @@ class DataClass:
 
     def connect_db(self):
         # self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db") # 실습실 경로
-        self.conn = sqlite3.connect(
-            "C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db")  # 노트북 경로
-        # self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
+        # self.conn = sqlite3.connect(
+            # "C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db")  # 노트북 경로
+        self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
         self.cur = self.conn.cursor()
 
     def close_db(self):
