@@ -82,49 +82,14 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         self.removeAllClients()
         self.server.close()
 
-    # def receive(self, addr, client):
-    #     data = b''
-    #     while True:
-    #         try:
-    #             recv = client.recv(1024)
-    #             print('여길 타나요 00', recv)
-    #         except Exception as e:
-    #             print('Recv() Error:', e)
-    #             break
-    #         else:
-    #             if not recv:  # If no data received, client closed the connection
-    #                 break
-    #
-    #             # Append the received data to the existing data
-    #             data += recv
-    #             print('여길 타나요 01', data)
-    #             msg = data.encode()
-    #             if msg.startswith("b'LOGIN_REQ'"):  # 로그인 확인
-    #                 print('여길 타나요3333')
-    #             # Check if we have received the complete message (assuming it ends with a newline character)
-    #             if b'\n' in data:
-    #                 print('여길 타나요1')
-    #                 # Split the data into individual messages based on the newline character
-    #                 messages = data.split(b'\n')
-    #                 # The last message might be incomplete, so we keep it for the next iteration
-    #                 data = messages[-1]
-    #
-    #                 # Process complete messages
-    #                 for msg in messages[:-1]:
-    #                     print('여길 타나요2')
-    #                     msg = recv.decode('utf-8')
-    #                     if msg.startswith("b'LOGIN_REQ'"):  # 로그인 확인
-    #                         print('여길 타나요3')
-    #                         msg_ = self.replace_msg(msg.decode('utf-8'), 'LOGIN_REQ', ':')
-    #                         print(msg_)
-    #                         email, pw = msg_[0], msg_[1]
-    #                         self.login_req_signal.emit(email, pw, client)
-
-                        # Add other message type handlers as needed...
+    # Add other message type handlers as needed...
     def receive(self, addr, client):  # 클라이언트드가 접속할 때마다 생성되는 쓰레드에 의해 실행되는 함수
         while True:
             try:
-                recv = client.recv(1024)  # 서버와 클라이언트가 1:1 연결이 이루어진 상태므로, recv()함수를 호출해 블럭 상태로 진입, 클라이언트가 보내는 메세지 대기
+                message_length = int.from_bytes(client.recv(4), byteorder='big')  # 메시지 길이를 수신하고 정수로 변환
+                recv = client.recv(message_length)  # 그 다음에 메시지 본문을 수신
+                # recv = client.recv(1024)  # 서버와 클라이언트가 1:1 연결이 이루어진 상태므로, recv()함수를 호출해 블럭 상태로 진입, 클라이언트가 보내는 메세지 대기
+                print(recv)
             except Exception as e:
                 print('Recv() Error :', e)
                 break
@@ -149,30 +114,32 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
                         self.signup_req_signal.emit(user_nm, user_pw, user_num, user_email,
                                                     user_r_date, client)
 
-                    elif msg.startswith('POST_REQ'): # 게시글 업로드
-                        # TODO 사진 받는 부분 필요함
-                        msg_ =  self.replace_msg(msg, 'POST_REQ', chr(0))
-                        title, contents, img_path = msg_[0], msg_[1]
+                    elif msg.startswith('POST_REQ'):  # 게시글 업로드
+                        msg_ = self.replace_msg(msg, 'POST_REQ', chr(0))
 
+                        title, contents, img_base64 = msg_[1], msg_[2], msg_[3]
+                        while len(img_base64) % 4 != 0:  # 필요한 패딩을 추가
+                            img_base64 += '='
+                        img_data = base64.b64decode(img_base64)
+                        img_path = f'{title}.jpg'
+
+                        with open(img_path, 'wb') as f:
+                            f.write(img_data)
                         print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
                         print('!! 서버 확인용', title, contents, img_path)
 
-                        # file = open(f'{title}_img', 'wb')
-                        # img_chunk =
-
 
                     else:
-                        # 채팅 부분
-                        msg_ = msg.split(chr(0))  # 메세지 구분자로 나눔
+                        msg_ = self.replace_msg(msg, 'POST_REQ', chr(0))
 
-                        # DB에 저장
-                        name_, chat_ = msg_[0], msg_[1]
-                        self.data.insert_chat_log(name_, msg_)  # DB에 이름과 로그, 시간 삽입
+                        title, contents, img_base64 = msg_[0], msg_[1], msg_[2]
+                        img_data = base64.b64decode(img_base64)
+                        img_path = f'{title}.jpg'
+                        with open(img_path, 'wb') as f:
+                            f.write(img_data)
 
-                        # 서버에 전달
-                        self.send(name_, chat_)
-                        self.recv_signal.emit(name_, chat_)  # 부모 윈도우에 전달하는 부분
-                        print('[server.py]받은 메세지: ', addr, name_, chat_)
+                        print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
+                        print('!! 서버 확인용', title, contents, img_path)
 
         # 이후 다시 무한 반복하며 recv() 함수를 호출해 다음 메세지 수신을 대기한다.
         self.removeClient(addr, client)

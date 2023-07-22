@@ -30,12 +30,12 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         '''
         컴퓨터 ip : 192.168.56.1
         실습실 자리 고정 ip : 10.10.20.103
-        노트북 ip: 172.16.2.73
+        기수갓 노트북 ip: 172.16.2.73
         기숙사 독서실 ip: 192.168.0.88
         '''
 
         # ip, port 지정
-        self.ip = '192.168.0.88'  # 임시지정
+        self.ip = '172.16.2.73'  # 임시지정
         self.port = 1121
         self.login_state = None
         self.user_name = None
@@ -66,8 +66,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     # TODO 이 함수에서는 서버에서 정보들을 받아서 레이아웃에 객체들을 넣어주는 역할을 함.
     def receive_upload_post(self,title, contents, img_path ):
         pass
-
-
 
 
 

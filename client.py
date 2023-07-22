@@ -103,58 +103,70 @@ class ClientSocket:
 
         self.stop()
 
-    # 하는중 하는중 하는중 0720
+
+    # def login_request(self, username, password):
+    #     self.client.send(('LOGIN_REQ' + username + ":" + password).encode())
+    #     # self.client.login_signal.emit(username, password)  # 로그인 요청 시그널 호출
+    #
+    # def check_vaild_email(self, email):
+    #     if email:
+    #         try:
+    #             self.client.send(('CHECK_EMAIL' + email).encode())
+    #         except AttributeError as e:
+    #             self.dialog.set_dialog_type(1, t_type='server_off')
+    #             print('[client.py] check_vaild_email 함수 전송 오류: ', e)
+    #
+    # def register_request(self, username, password, user_num, email, r_date):
+    #     """유저 정보를 받아와서 db에 저장 신호를 보냄"""
+    #     self.client.send(f'SIGNUP_REQ{username}:{password}:{user_num}:{email}:{r_date}'.encode())  # 회원가입 요청 시그널 호출
+
     def login_request(self, username, password):
-        self.client.send(('LOGIN_REQ' + username + ":" + password).encode())
-        # self.client.login_signal.emit(username, password)  # 로그인 요청 시그널 호출
+        message = 'LOGIN_REQ' + username + ":" + password
+        self._send_message(message)
 
     def check_vaild_email(self, email):
         if email:
             try:
-                self.client.send(('CHECK_EMAIL' + email).encode())
+                self._send_message('CHECK_EMAIL' + email)
             except AttributeError as e:
                 self.dialog.set_dialog_type(1, t_type='server_off')
                 print('[client.py] check_vaild_email 함수 전송 오류: ', e)
 
     def register_request(self, username, password, user_num, email, r_date):
         """유저 정보를 받아와서 db에 저장 신호를 보냄"""
-        self.client.send(f'SIGNUP_REQ{username}:{password}:{user_num}:{email}:{r_date}'.encode())  # 회원가입 요청 시그널 호출
+        message = f'SIGNUP_REQ{username}:{password}:{user_num}:{email}:{r_date}'
+        self._send_message(message)
+
+    def _send_message(self, message):
+        """메시지 길이를 먼저 보내고, 그 다음에 메시지 본문을 보냅니다."""
+        message = message.encode()
+        message_length = len(message).to_bytes(4, byteorder='big')  # 메시지 길이를 바이트로 변환
+        self.client.sendall(message_length + message)
 
     def duplicate_check_request(self, username):
         self.client.duplicate_check_signal.emit(username)  # 로그인 중복 체크 요청 시그널 호출
 
     # TODO 사진 전송 부분 넣어야 함
     def post_upload_request(self, title, contents, img_path=None):
-
-        # # 구분자로 나누어 제목, 내용을 보냄
-        # s_ = chr(0)
-        # self.client.send(f'POST_REQ{title}{s_}{contents}{s_}{img_path}'.encode())
-        #
-        # # 사진을 보냄
-        # file = open(f'{img_path}', 'rb')
-        # img_data = file.read(2048)
-        #
-        # while img_data:
-        #     self.client.send(img_data)
-        #     img_data = file.read(2048)
-
-        # file.close()
-        # self.client.close()
-        # 구분자로 나누어 제목, 내용을 보냄
         s_ = chr(0)
 
-        # 사진을 보냄
+        # # 사진을 base64 문자열로 변환
+        # with open(img_path, 'rb') as f:
+        #     img_data = base64.b64encode(f.read()).decode('utf-8')
+        #
+        # message = 'POST_REQ' + s_ + title + s_ + contents + s_ + img_data
+        # self.client.sendall(message.encode('utf-8'))
+
+        # 사진을 base64 문자열로 변환
         with open(img_path, 'rb') as f:
-            img_data = f.read()
+            img_data = base64.b64encode(f.read()).decode('utf-8')
 
-        title_bytes = title.encode('utf-8')
-        contents_bytes = contents.encode('utf-8')
-        message = title_bytes + s_.encode() + contents_bytes + s_.encode() + img_data
-        self.client.sendall(message)
+        message = 'POST_REQ' + s_ + title + s_ + contents + s_ + img_data
+        message = message.encode('utf-8')
 
-
-        # 클라이언트 여기서 닫아야 되나?
-
+        # 메시지의 길이를 보내고, 그 다음에 메시지 본문을 보낸다.
+        message_length = len(message).to_bytes(4, byteorder='big')  # 메시지 길이를 바이트로 변환
+        self.client.sendall(message_length + message)
 
     def send(self, msg, name):  # 부모 윈도우의 '보내기'를 누르면 호출되는 함수.
         if not self.bConnect:
