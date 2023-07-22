@@ -867,23 +867,10 @@
                           <number>0</number>
                          </property>
                          <item>
-                          <spacer name="horizontalSpacer_8">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>601</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                         <item>
                           <widget class="QLineEdit" name="reply_lineedit">
                            <property name="minimumSize">
                             <size>
-                             <width>620</width>
+                             <width>0</width>
                              <height>30</height>
                             </size>
                            </property>
@@ -940,7 +927,7 @@
                        </widget>
                       </item>
                       <item>
-                       <widget class="QWidget" name="widget_6" native="true">
+                       <widget class="QWidget" name="paging_widget" native="true">
                         <property name="minimumSize">
                          <size>
                           <width>0</width>

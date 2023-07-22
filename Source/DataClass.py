@@ -15,10 +15,10 @@ class DataClass:
         '''
 
     def connect_db(self):
-        # self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db") # 실습실 경로
+        self.conn = sqlite3.connect("C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db") # 실습실 경로
         # self.conn = sqlite3.connect(
             # "C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\data.db")  # 노트북 경로
-        self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
+        # self.conn = sqlite3.connect("C:\\Users\\thdus\\PycharmProjects\\class_album\\Data\\data.db")
         self.cur = self.conn.cursor()
 
     def close_db(self):
@@ -122,14 +122,44 @@ class DataClass:
         self.commit_db()  # 저장
         self.close_db()  # 닫아주기
 
+    def return_user_email(self, name):
+        """유저의 이름 확인해 이메일 반환"""
+        self.connect_db()
+        c_ = f"USER_NAME = '{name}'"
+        user_email = self.return_specific_data(table_name='TB_USER', column='USER_EMAIL', conditon=c_)
+        return user_email
+
+    def return_user_name(self, email):
+        """유저의 이메일 확인해 이름 반환"""
+        self.connect_db()
+        c_ = f"USER_EMAIL = '{email}'"
+        user_name = self.return_specific_data(table_name='TB_USER', column='USER_NAME', conditon=c_)  # 이름
+        return user_name
+
+    def return_user_info(self, name_or_email):
+        self.connect_db()
+        condition = None
+        column_to_return = None
+
+        if '@' in name_or_email:  # Check if the input is an email
+            condition = f"USER_EMAIL = '{name_or_email}'"
+            column_to_return = 'USER_NAME'
+        else:
+            condition = f"USER_NAME = '{name_or_email}'"
+            column_to_return = 'USER_EMAIL'
+
+        user_info = self.return_specific_data(table_name='TB_USER', column=column_to_return, condition=condition)
+        return user_info
+
     def insert_chat_log(self, name, chat):
         """채팅 기록 저장"""
         # db 연결
         self.connect_db()
 
         # 조건문 및 쿼리
-        c_ = f"USER_NAME = '{name}'"
-        user_email = self.return_specific_data(table_name='TB_USER', column='USER_EMAIL', conditon=c_)
+        # c_ = f"USER_NAME = '{name}'"
+        # user_email = self.return_specific_data(table_name='TB_USER', column='USER_EMAIL', conditon=c_)
+        user_email = self.return_user_email(name)
         query = f"INSERT INTO TB_CHAT (USER_EMAIL, CHAT_TIME, CHAT_LOG) VALUES (?, ?, ?)"
         time_ = self.return_datetime('time')
         chat_ = chat[1]
@@ -140,6 +170,21 @@ class DataClass:
         # 데이터 저장 및 닫기
         self.commit_db()
         self.close_db()
+
+    def insert_post_log(self, name, email, b_title, b_contents, time, img_path=None):
+        """게시글 업로드 기록 저장"""
+        self.connect_db()
+
+        # 게시글 내용 저장
+        query = f"INSERT INTO TB_NOTICE_BOARD (USER_EMAIL, USER_NAME, BOARD_TITLE," \
+                f"BOARD_CONTENTS, BOARD_IMG, UPDATE_TIME) VALUES" \
+                f"(?, ?, ?, ?, ?, ?)"
+        self.cur.execute(query, (email, name, b_title, b_contents, img_path, time))
+
+        # db 저장 및 닫기
+        self.commit_db()
+        self.close_db()
+        query = f''
 
     def return_df(self, table_name):
         """데이터프레임을 리턴합니다."""
@@ -160,6 +205,15 @@ class DataClass:
         r_data = pd.read_sql(query, self.conn)
         specific_data = r_data.values[0][0]
         return specific_data
+
+    def get_table_row_count(self, table_name):
+        self.connect_db()
+
+        # 특정 테이블의 행 개수 얻기
+        sql_query = f"SELECT COUNT(*) FROM {table_name};"
+        row_count = pd.read_sql_query(sql_query, self.conn)
+        self.close_db()
+        return row_count.iloc[0, 0]
 
     def check_login(self, id, pw):
         """로그인 데이터를 확인해서 데이터가 있는지 확인합니다."""
@@ -185,5 +239,7 @@ if __name__ == '__main__':
     # # print(result.values[0][0])
     # d.insert_user_info('소연', 'soyeon@soyeon.com', '1234', '2023-07-21', '111-111-1111')
     # # print(a)
+    # d.insert_post_log('name', 'email', 'b_title', 'b_contents', 'time', 'img_path')
+    # print(d.get_table_row_count('TB_USER'))
 
     pass

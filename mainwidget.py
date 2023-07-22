@@ -28,26 +28,24 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.c = client.ClientSocket(self)  # 클라이언트 소켓 생성
 
         '''
-        컴퓨터 ip : 192.168.56.1
+        실습실 컴퓨터 ip : 192.168.56.1
         실습실 자리 고정 ip : 10.10.20.103
-        기수갓 노트북 ip: 172.16.2.73
+        기숙사 노트북 ip: 172.16.2.73
         기숙사 독서실 ip: 192.168.0.88
         '''
 
         # ip, port 지정
-        self.ip = '172.16.2.73'  # 임시지정
+        self.ip = '192.168.56.1'  # 임시지정
         self.port = 1121
         self.login_state = None
         self.user_name = None
 
         # 함수 연결
         self.connectClicked()
-        self.add_post()  # 글 내용 리스트 추가
+        self.add_post(1)  # 글 내용 리스트 추가
         self.event_connect()  # 클릭 시그널 연결
         self.init_UI()  # 초기설정(카테고리 버튼 추가 등)
         # self.var_init() # 변수
-
-
 
     # -- 변수
     # def var_init(self):
@@ -55,19 +53,17 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     #     self.login_state = False
     #     self.user_name = None
 
-
     # TODO 여기서 사진을 클라이언트 -> 서버 -> DB 저장 및 사진 경로 저장
     #  -> 메인윈도우 레이아웃 객체 추가 하는 부분까지 연결
     def send_save_post(self, title, contents, img_path=None):
         print('[mainwindow.py] 사진 저장 테스트 중')
         print(title, contents, img_path)
-        self.c.post_upload_request(title=title, contents=contents, img_path=img_path)
+        print(self.user_name)
+        self.c.post_upload_request(title=title, name=self.user_name, contents=contents, img_path=img_path)
 
     # TODO 이 함수에서는 서버에서 정보들을 받아서 레이아웃에 객체들을 넣어주는 역할을 함.
-    def receive_upload_post(self,title, contents, img_path ):
+    def receive_upload_post(self, title, contents, img_path):
         pass
-
-
 
     # -- 버튼 시그널 발생 모음
     def event_connect(self):
@@ -79,15 +75,15 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.register_btn.mousePressEvent = lambda event: self.stackedWidget.setCurrentWidget(
             self.register_page)  # 회원가입 페이지로 이동
 
-        # 이벤트 연결
-        self.write_contents_btn.clicked.connect(self.write_contents)  # 글 작성하기
-        self.reply_btn.clicked.connect(self.write_reply)  # 댓글 작성
 
         # 시그널 연결
         self.chat_send_btn.clicked.connect(self.sendMsg)  # 메세지 보내기
         self.chat_lineedit.returnPressed.connect(self.sendMsg)  # 메세지 보내기(엔터)
         self.login_start_btn.clicked.connect(self.sendLogin)  # 로그인 확인
         self.register_admit_btn.clicked.connect(self.sendRegister)  # 회원가입 유효성 확인 -> 회원가입
+        self.write_contents_btn.clicked.connect(self.write_contents)  # 글 작성하기
+        self.reply_btn.clicked.connect(self.write_reply)  # 댓글 작성
+        self.reply_lineedit.returnPressed.connect(self.write_reply)  # 댓글 작성
 
     ## 네트워크 #################################################################
     # -- 네트워크 관련
@@ -278,6 +274,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.contents_title.setText(title)  # 라벨에 타이틀 넣기
 
         # 조건
+        # TODO 글 읽는 부분도 서버에서 접근해야 함.
         c_ = f"BOARD_TITLE = '{title}'"
         contents = self.data.return_specific_data(table_name='TB_NOTICE_BOARD', column='BOARD_CONTENTS', conditon=c_)
         img_ = self.data.return_specific_data(table_name='TB_NOTICE_BOARD', column='BOARD_IMG', conditon=c_)
@@ -286,17 +283,33 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         read_mode = BoardRead(title=title, writer=writer, img_path=img_, contents=contents, write_time=write_date)
         self.main_page_contents.addWidget(read_mode)
 
-    def add_post(self):
+    def add_post(self, num):
+        self.current_page_num = num
         # 카테고리에 리스트위젯 추가
-        date_format = datetime.now().strftime("%Y-%m-%d")
+
+        # 제목 리스트 위젯 추가
         list_title = ListItem('No', '테스트 제목', '이름', '날짜', self)
         list_title.set_title_bar()
         self.main_page_contents.addWidget(list_title)
 
-        c_df = self.data.return_df('TB_NOTICE_BOARD')
-        self.c_df_cnt = len(c_df.index)  # 글 갯수
+        # 날짜 포멧팅
+        date_format = datetime.now().strftime("%Y-%m-%d")
 
-        for i in range(self.c_df_cnt):
+        # 데이터 프레임 리턴
+        c_df = self.data.return_df('TB_NOTICE_BOARD')
+
+        # 페이지당 표시할 데이터의 수
+        page_size = 10
+
+        # 현재 페이지의 시작점과 끝점
+        start = (num-1) * page_size
+        end = start + page_size
+
+        self.c_df_cnt = num * 10  # len(c_df.index)  # 글 갯수
+
+        for i in range(start, end):
+            if i >= len(c_df.index):
+                break
             index = c_df.iloc[i]['BOARD_ID']
             title = c_df.iloc[i]['BOARD_TITLE']
             name = c_df.iloc[i]['USER_NAME']
@@ -320,7 +333,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.clear_layout(self.main_page_contents)
             self.clear_layout(self.main_paging)
             self.active_btn(True)
-            self.add_post()
+            self.add_post(1)
 
         # 여기에 리스트위젯 추가하는 부분
         if c_name in ['register', 'login']:
@@ -331,16 +344,34 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     # -- 댓글 작성
     def write_reply(self):
         """댓글 작성하는 부분"""
+        title = self.contents_title.text()
+
+        self.reply_lineedit.clear()
+
         pass
 
     # -- ui 관련 부분 #################################################
     def move_paging(self, btn_txt):
         """선택한 버튼에 따라 페이지를 이동시킨다."""
-        # btn_move_dict = {
-        #     '<'
-        #
-        # }
-        print(btn_txt)
+        self.clear_layout(self.main_page_contents)
+        # for btn in self.paging_widget.findChildren(QPushButton):
+        #     btn.setStyleSheet('background-color: white;')
+
+        self.total_count = self.data.get_table_row_count('TB_NOTICE_BOARD')
+        if btn_txt == '<<':
+            new_page_num = 1  # 첫 페이지로 이동
+        elif btn_txt == '<':
+            new_page_num = max(1, self.current_page_num - 1)  # 이전 페이지로 이동
+        elif btn_txt == '>':
+            new_page_num = min(self.current_page_num + 1, self.total_count)  # 다음 페이지로 이동
+        elif btn_txt == '>>':
+            new_page_num = self.total_count // 10 + 1  # 마지막 페이지로 이동
+        else:
+            # 선택한 페이지로 이동
+            new_page_num = int(btn_txt)
+        self.add_post(new_page_num)
+        self.current_page_num = new_page_num
+        print(new_page_num)
 
     def init_UI(self):
         """기본으로 들어갈 ui를 설정합니다."""
@@ -352,21 +383,23 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             if category == 'home':
                 new_category.change_backgrond_color()
 
-        self.make_arrow_button(self.c_df_cnt)  # 화살표 번호 생성
+        self.make_arrow_button()  # 화살표 번호 생성
         self.reply_lineedit.hide()
         self.reply_btn.hide()
         self.register_cellphone_num_lineedit.setInputMask('000-0000-0000;_')
 
     # 화살표 버튼
-    def make_arrow_button(self, cnt):
+    def make_arrow_button(self):
         # 화살표 버튼 생성하기
         arrow_list = ['<<', '<', '>', '>>']
-
+        cnt = self.data.get_table_row_count('TB_NOTICE_BOARD')
+        cnt_ = cnt // 10
+        print(cnt, cnt_)
         # 버튼 생성
         for i in arrow_list[:2]:
             btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
-        for i in range(1, cnt):
+        for i in range(1, cnt_):
             btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
         for i in arrow_list[2:]:
@@ -380,7 +413,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
             self.write_contents_btn.show()
             self.reply_lineedit.hide()
             self.reply_btn.hide()
-            self.make_arrow_button(self.c_df_cnt)
+            self.make_arrow_button()
             self.contents_title.setText('게시판 제목')
         else:
             self.search_btn.hide()

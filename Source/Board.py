@@ -60,5 +60,5 @@ class BoardRead(QWidget, Ui_board_read_widget):
         self.writer_lab.setText(writer)
         self.write_time_lab.setText(write_time)
         self.img_lab.setPixmap(QPixmap(img_path).scaled(QSize(500, 500), aspectRatioMode=Qt.KeepAspectRatio))  # 이미지
-        self.contents_lab.setText(contents)
+        self.contents_lab.setText(str(contents))
         # self.tableWidget # 댓글 내용

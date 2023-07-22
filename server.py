@@ -1,3 +1,4 @@
+import os.path
 from threading import Thread  # 파이썬 모듈 불러오기
 from socket import *
 import base64
@@ -9,11 +10,11 @@ from Source.dig_warning import DialogWarning
 class ServerSocket(QObject):  # 네트워크 관련 클래스
     update_signal = pyqtSignal(tuple, bool)
     recv_signal = pyqtSignal(str, str)
-
-    # 시그널 제작중 0720
     login_req_signal = pyqtSignal(str, str, socket)  # 로그인 요청 시그널
     duplicate_check_signal = pyqtSignal(str, socket)  # 이메일 중복 확인 시그널
     signup_req_signal = pyqtSignal(str, str, str, str, str, socket)  # 회원가입 요청 시그널 --> 이메일, 비밀번호
+    post_upload_req_signal = pyqtSignal(str, str, str, str) # 이름, 제목, 내용, 사진경로(이메일은 db에서 불러옴)
+
 
     def __init__(self, parent):
         super().__init__()  # 클라이언트 접속, 접속종료, 메세지 수신시 사용되는 사용자 정의 시그널에 부모 윈도으이 함수를 슬롯으로 등록해 클래스간 신호 전달받기 위함
@@ -29,12 +30,11 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         # 시그널 정리
         self.update_signal.connect(self.parent.updateClient)
         self.recv_signal.connect(self.parent.updateMsg)  # 메세지 수신 시그널
-
-        # 정리중 0720
         self.login_req_signal.connect(self.handle_login_request)  # 로그인 요청
         self.duplicate_check_signal.connect(self.handle_duplicate_check)  # 이메일 중복 확인 요청
         # self.duplicate_check_signal.connect(self.handle_duplicate_check)
         self.signup_req_signal.connect(self.hanle_signup_request)
+        self.post_upload_req_signal.connect(self.post_upload_request)
 
     def __del__(self):  # 서버소켓 클래스 객체가 파괴될 때 호출되는 소멸자. stop() 함수 사용해 대기중인 서버 소켓 종료
         self.stop()
@@ -116,30 +116,42 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
 
                     elif msg.startswith('POST_REQ'):  # 게시글 업로드
                         msg_ = self.replace_msg(msg, 'POST_REQ', chr(0))
+                        if len(msg_) == 4: # 제목, 글만 작성할 때
+                            name, title, contents = msg_[1], msg_[2], msg_[3]
+                            print(name, title, contents)
 
-                        title, contents, img_base64 = msg_[1], msg_[2], msg_[3]
-                        while len(img_base64) % 4 != 0:  # 필요한 패딩을 추가
-                            img_base64 += '='
-                        img_data = base64.b64decode(img_base64)
-                        img_path = f'{title}.jpg'
+                        else: #제목, 글, 사진 모두 작성할 때
+                            name, title, contents, img_base64 = msg_[1], msg_[2], msg_[3], msg_[4] # 제목, 내용, 사진 경로
+                            while len(img_base64) % 4 != 0:  # 필요한 패딩을 추가
+                                img_base64 += '='
+                            img_data = base64.b64decode(img_base64)
 
-                        with open(img_path, 'wb') as f:
-                            f.write(img_data)
-                        print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
-                        print('!! 서버 확인용', title, contents, img_path)
+                            # TODO 1. 사진 경로 지정해서 저장
+                            # directory = "./Data/Board_img/" # 경로 지정하여 사진 저장 - 상대경로
+                            directory = "C:\\Users\\KDT103\\Desktop\\coding\\0. 프로젝트\\개인프로젝트\\class_album\\Data\\receive_img\\" # 경로 지정하여 사진 저장 - 절대경로
+                            if not os.path.exists(directory):
+                                os.makedirs(directory)
+                            img_path = directory + f'{title}.jpg' # 사진 이름 지정  TODO 3. 사진이름 추후 수정
+                            with open(img_path, 'wb') as f:
+                                f.write(img_data)
 
+                            # TODO 2. DB 저장
+                            self.post_upload_request(name=name, title=title, contents=contents, img_path=img_path)
+                            print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
+                            print('!! 서버 확인용', title, contents, img_path)
 
                     else:
-                        msg_ = self.replace_msg(msg, 'POST_REQ', chr(0))
+                        # 채팅 부분
+                        msg_ = msg.split(chr(0))  # 메세지 구분자로 나눔
 
-                        title, contents, img_base64 = msg_[0], msg_[1], msg_[2]
-                        img_data = base64.b64decode(img_base64)
-                        img_path = f'{title}.jpg'
-                        with open(img_path, 'wb') as f:
-                            f.write(img_data)
+                        # DB에 저장
+                        name_, chat_ = msg_[0], msg_[1]
+                        self.data.insert_chat_log(name_, msg_)  # DB에 이름과 로그, 시간 삽입
 
-                        print('[server.py] 클라이언트에서 받은 글쓰기 요청', msg_)
-                        print('!! 서버 확인용', title, contents, img_path)
+                        # 서버에 전달
+                        self.send(name_, chat_)
+                        self.recv_signal.emit(name_, chat_)  # 부모 윈도우에 전달하는 부분
+                        print('[server.py]받은 메세지: ', addr, name_, chat_)
 
         # 이후 다시 무한 반복하며 recv() 함수를 호출해 다음 메세지 수신을 대기한다.
         self.removeClient(addr, client)
@@ -148,6 +160,15 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         """헤더 없애고 리턴"""
         msg = msg.replace(header, "").split(split)
         return msg
+
+    def post_upload_request(self, name, title, contents, img_path=None):
+        """게시글 제목과 내용을 db에 저장합니다."""
+        email = self.data.return_user_email(name)
+        time = self.data.return_datetime('date')
+        self.data.insert_post_log(name=name, email=email, b_title=title,
+                                  b_contents=contents, img_path=img_path, time=time)
+        print('[server.py] 게시글 업로드 내용을 저장합니다.')
+        pass
 
     def handle_login_request(self, email, password, client):
         # 로그인 요청 처리 구현
@@ -174,6 +195,7 @@ class ServerSocket(QObject):  # 네트워크 관련 클래스
         """회원정보 저장"""
         self.data.insert_user_info(user_nm=user_nm, email=email, pw=pw, rdate=r_date,
                                    user_num=user_num)  # 회원정보 TB_USER에 저장
+        print('[server.py] 회원정보가 저장되었습니다.')
 
     def send(self, name, msg):  # 클라이언트가 보낸 데이터 수신 시, 연결된 모든 클라이언트들에게 해당 메세지를 보내는 역할(broadcast)을 담당.
         try:

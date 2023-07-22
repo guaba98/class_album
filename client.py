@@ -147,26 +147,46 @@ class ClientSocket:
         self.client.duplicate_check_signal.emit(username)  # 로그인 중복 체크 요청 시그널 호출
 
     # TODO 사진 전송 부분 넣어야 함
-    def post_upload_request(self, title, contents, img_path=None):
+    # def post_upload_request(self, title, contents, img_path=None):
+    #     s_ = chr(0)
+    #
+    #     # 사진을 base64 문자열로 변환
+    #     with open(img_path, 'rb') as f:
+    #         img_data = base64.b64encode(f.read()).decode('utf-8')
+    #
+    #     message = 'POST_REQ' + s_ + title + s_ + contents + s_ + img_data
+    #     message = message.encode('utf-8')
+    #
+    #     # 메시지의 길이를 보내고, 그 다음에 메시지 본문을 보낸다.
+    #     message_length = len(message).to_bytes(4, byteorder='big')  # 메시지 길이를 바이트로 변환
+    #     self.client.sendall(message_length + message)
+    def post_upload_request(self, name, title, contents, img_path=None):
+        print(name, title, contents, img_path)
         s_ = chr(0)
 
-        # # 사진을 base64 문자열로 변환
-        # with open(img_path, 'rb') as f:
-        #     img_data = base64.b64encode(f.read()).decode('utf-8')
-        #
-        # message = 'POST_REQ' + s_ + title + s_ + contents + s_ + img_data
-        # self.client.sendall(message.encode('utf-8'))
+        # TODO 이름 테스트 중 None타입 나중에 가입하고서 하게 바꿀 것
+        if name is None:
+            name = '관리자'
 
-        # 사진을 base64 문자열로 변환
-        with open(img_path, 'rb') as f:
-            img_data = base64.b64encode(f.read()).decode('utf-8')
+        if img_path is not None:
+            # 사진을 base64 문자열로 변환
+            with open(img_path, 'rb') as f:
+                img_data = base64.b64encode(f.read()).decode('utf-8')
+            message = 'POST_REQ' + s_ + name + s_+ title + s_ + contents + s_ + img_data
+        else:
+            message = 'POST_REQ' + s_ + name + s_ + title + s_ + contents
+        self._send_message(message)
 
-        message = 'POST_REQ' + s_ + title + s_ + contents + s_ + img_data
-        message = message.encode('utf-8')
-
-        # 메시지의 길이를 보내고, 그 다음에 메시지 본문을 보낸다.
-        message_length = len(message).to_bytes(4, byteorder='big')  # 메시지 길이를 바이트로 변환
-        self.client.sendall(message_length + message)
+    # def send(self, msg, name):  # 부모 윈도우의 '보내기'를 누르면 호출되는 함수.
+    #     if not self.bConnect:
+    #         return
+    #     try:
+    #         s_ = chr(0)
+    #         msg_ = f'{name}{s_}{msg}'
+    #         print('######메세지########: ', msg_)
+    #         self.client.send(msg_.encode())
+    #     except Exception as e:
+    #         print('Send() Error : ', e)
 
     def send(self, msg, name):  # 부모 윈도우의 '보내기'를 누르면 호출되는 함수.
         if not self.bConnect:
@@ -175,7 +195,7 @@ class ClientSocket:
             s_ = chr(0)
             msg_ = f'{name}{s_}{msg}'
             print('######메세지########: ', msg_)
-            self.client.send(msg_.encode())
+            self._send_message(msg_)
         except Exception as e:
             print('Send() Error : ', e)
 

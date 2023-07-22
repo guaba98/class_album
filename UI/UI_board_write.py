@@ -128,7 +128,7 @@ class Ui_board_write_widget(object):
         self.widget_3.setObjectName("widget_3")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.widget_3)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
         self.img_upload_btn = QtWidgets.QPushButton(self.widget_3)
         self.img_upload_btn.setMinimumSize(QtCore.QSize(100, 0))
