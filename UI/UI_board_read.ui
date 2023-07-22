@@ -115,6 +115,20 @@
               </spacer>
              </item>
              <item>
+              <widget class="QPushButton" name="del_btn">
+               <property name="text">
+                <string>삭제</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="edit_btn">
+               <property name="text">
+                <string>수정</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QLabel" name="commnets_cnt_lab">
                <property name="text">
                 <string>댓글수</string>

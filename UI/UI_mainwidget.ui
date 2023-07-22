@@ -616,6 +616,9 @@
                </property>
               </spacer>
              </item>
+             <item>
+              <layout class="QVBoxLayout" name="logout_lay"/>
+             </item>
             </layout>
            </widget>
           </item>
@@ -1284,7 +1287,7 @@ width: 0px;
                               <x>0</x>
                               <y>0</y>
                               <width>38</width>
-                              <height>331</height>
+                              <height>314</height>
                              </rect>
                             </property>
                             <property name="styleSheet">
