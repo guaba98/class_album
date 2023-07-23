@@ -5,6 +5,7 @@ import sys
 import socket
 import server
 from UI.UI_server import Ui_server_form
+from Source.Page import PageBtn
 
 QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
@@ -17,6 +18,7 @@ class CWidget(QWidget, Ui_server_form):
         self.setupUi(self)
 
         self.s = server.ServerSocket(self)
+        self.p = PageBtn()
         self.initUI()
 
     def initUI(self):
@@ -38,6 +40,10 @@ class CWidget(QWidget, Ui_server_form):
 
         # 채팅창 부분
         self.send_btn.clicked.connect(self.sendMsg)
+
+        # 버튼 UI
+        self.p.set_background_color(self.send_btn)
+        self.p.set_background_color(self.server_start_btn)
 
     def toggleButton(self, state):
         """상태에 따라 값 바꿔주기"""
@@ -91,6 +97,7 @@ class CWidget(QWidget, Ui_server_form):
 
     def closeEvent(self, e) -> None:
         self.s.stop()
+
 
 
 if __name__ == '__main__':

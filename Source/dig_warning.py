@@ -60,7 +60,7 @@ class DialogWarning(QDialog, Ui_Dialog):
         elif t_type == 'email_input':
             self.warning_lab.setText('이메일을 입력해 주세요.')
         elif t_type == 'cell_num_input':
-            self.warning_lab.setText('핸드폰 번호를 입력해 주세요.')
+            self.warning_lab.setText('올바른 핸드폰 번호를 입력해 주세요.')
         elif t_type == 'pw_input':
             self.warning_lab.setText('비밀번호를 입력해 주세요.')
         elif t_type == 'unable_chat':

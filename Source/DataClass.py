@@ -103,6 +103,22 @@ class DataClass:
         self.commit_db()
         self.close_db()
 
+    def insert_user_commnets(self, title, user_name, commnets):
+        """유저의 댓글을 저장함"""
+        self.connect_db()
+        # 1. 제목을 확인해서 board_id 확인하기'
+        c = f"BOARD_TITLE = '{title}'"
+        board_id = self.return_specific_data(table_name='TB_NOTICE_BOARD', column='BOARD_ID', conditon=c)
+        print(board_id)
+        user_email = self.return_user_email(user_name)
+        c_time = self.return_datetime('time')
+
+        query = f"INSERT INTO TB_COMMNET (BOARD_ID, USER_EMAIL, USER_NM, COMMNET, COMMENT_DATE, COMMENT_TYPE) VALUES" \
+                f"(?, ?, ?, ?, ?, ?)"
+        self.cur.execute(query, (board_id, user_email, user_name, commnets, c_time, 0))
+        self.commit_db()
+        self.close_db()
+
     def insert_user_log(self, email):
         """유저 접속기록을 삽입합니다."""
 

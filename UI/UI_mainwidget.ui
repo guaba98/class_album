@@ -170,7 +170,7 @@
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>admin</string>
+                   <string/>
                   </property>
                  </widget>
                 </item>
@@ -209,7 +209,10 @@ border-radius: 10px;</string>
 border-radius: 10px;</string>
                   </property>
                   <property name="text">
-                   <string>1234</string>
+                   <string/>
+                  </property>
+                  <property name="echoMode">
+                   <enum>QLineEdit::Password</enum>
                   </property>
                  </widget>
                 </item>
@@ -1000,22 +1003,12 @@ font: 10pt &quot;나눔스퀘어 네오 Regular&quot;;</string>
                           <number>0</number>
                          </property>
                          <item>
-                          <widget class="QLineEdit" name="reply_lineedit">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>30</height>
-                            </size>
-                           </property>
-                           <property name="styleSheet">
-                            <string notr="true">background-color: rgb(255, 255, 255);</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
                           <spacer name="horizontalSpacer_8">
                            <property name="orientation">
                             <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Preferred</enum>
                            </property>
                            <property name="sizeHint" stdset="0">
                             <size>
@@ -1024,6 +1017,19 @@ font: 10pt &quot;나눔스퀘어 네오 Regular&quot;;</string>
                             </size>
                            </property>
                           </spacer>
+                         </item>
+                         <item>
+                          <widget class="QLineEdit" name="reply_lineedit">
+                           <property name="minimumSize">
+                            <size>
+                             <width>620</width>
+                             <height>30</height>
+                            </size>
+                           </property>
+                           <property name="styleSheet">
+                            <string notr="true">background-color: rgb(255, 255, 255);</string>
+                           </property>
+                          </widget>
                          </item>
                          <item>
                           <widget class="QPushButton" name="reply_btn">

@@ -38,7 +38,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         # ip, port 지정
         self.ip = '192.168.56.1'  # 임시지정
         self.port = 1121
-        self.login_state = None
+        self.login_state = False
         self.user_name = None
 
         # 함수 연결
@@ -51,11 +51,8 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     # -- 변수
     def var_init(self):
         """변수 들어가는 함수"""
-        self.login_state = False
         self.user_name = None
 
-    # TODO 여기서 사진을 클라이언트 -> 서버 -> DB 저장 및 사진 경로 저장
-    #  -> 메인윈도우 레이아웃 객체 추가 하는 부분까지 연결
     def send_save_post(self, title, contents, img_path=None):
         print('[mainwindow.py] 사진 저장 테스트 중')
         print(title, contents, img_path)
@@ -348,11 +345,8 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     # -- 댓글 작성
     def write_reply(self):
         """댓글 작성하는 부분"""
-        title = self.contents_title.text()
-
+        self.data.insert_user_commnets(title=self.contents_title.text(), user_name=self.user_name, commnets=self.reply_lineedit.text()) # 데이터 저장
         self.reply_lineedit.clear()
-
-        pass
 
     # -- ui 관련 부분 #################################################
     def move_paging(self, btn_txt):
@@ -395,6 +389,9 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         # 버튼 배경
         self.btn.set_background_color(self.login_start_btn)
         self.btn.set_background_color(self.register_admit_btn)
+
+        # 타이틀
+        self.setWindowTitle('우리반 앨범 게시판')
 
     # 화살표 버튼
     def make_arrow_button(self):

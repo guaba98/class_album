@@ -92,10 +92,14 @@ class Ui_server_form(object):
         font = QtGui.QFont()
         font.setFamily("나눔스퀘어 네오 Regular")
         font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
         self.tableWidget_members.setFont(font)
         self.tableWidget_members.setStyleSheet("QTableWidget#tableWidget_members{\n"
 "border-radius:7px;\n"
 "border: 2px solid #2F80ED;\n"
+"    font: 10pt \"나눔스퀘어 네오 Regular\";\n"
 "}\n"
 "")
         self.tableWidget_members.setObjectName("tableWidget_members")
