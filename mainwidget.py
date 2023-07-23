@@ -26,6 +26,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.data = DataClass()
         self.dig_warning = DialogWarning()
         self.c = client.ClientSocket(self)  # 클라이언트 소켓 생성
+        self.btn = PageBtn()
 
         '''
         실습실 컴퓨터 ip : 192.168.56.1
@@ -45,13 +46,13 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.add_post(1)  # 글 내용 리스트 추가
         self.event_connect()  # 클릭 시그널 연결
         self.init_UI()  # 초기설정(카테고리 버튼 추가 등)
-        # self.var_init() # 변수
+        self.var_init() # 변수
 
     # -- 변수
-    # def var_init(self):
-    #     """변수 들어가는 함수"""
-    #     self.login_state = False
-    #     self.user_name = None
+    def var_init(self):
+        """변수 들어가는 함수"""
+        self.login_state = False
+        self.user_name = None
 
     # TODO 여기서 사진을 클라이언트 -> 서버 -> DB 저장 및 사진 경로 저장
     #  -> 메인윈도우 레이아웃 객체 추가 하는 부분까지 연결
@@ -273,6 +274,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.clear_layout(self.main_page_contents)  # 레이아웃 비우기
         self.contents_title.setText(title)  # 라벨에 타이틀 넣기
 
+
         # 조건
         # TODO 글 읽는 부분도 서버에서 접근해야 함.
         c_ = f"BOARD_TITLE = '{title}'"
@@ -280,8 +282,10 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         img_ = self.data.return_specific_data(table_name='TB_NOTICE_BOARD', column='BOARD_IMG', conditon=c_)
 
         # 내용 채우기
-        read_mode = BoardRead(title=title, writer=writer, img_path=img_, contents=contents, write_time=write_date)
+        read_mode = BoardRead(title=title, writer=writer, img_path=img_, contents=contents, write_time=write_date, parent=self)
         self.main_page_contents.addWidget(read_mode)
+
+
 
     def add_post(self, num):
         self.current_page_num = num
@@ -388,6 +392,10 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.reply_btn.hide()
         self.register_cellphone_num_lineedit.setInputMask('000-0000-0000;_')
 
+        # 버튼 배경
+        self.btn.set_background_color(self.login_start_btn)
+        self.btn.set_background_color(self.register_admit_btn)
+
     # 화살표 버튼
     def make_arrow_button(self):
         # 화살표 버튼 생성하기
@@ -399,12 +407,14 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         for i in arrow_list[:2]:
             btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
-        for i in range(1, cnt_):
+        for i in range(1, 6):
             btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
         for i in arrow_list[2:]:
             btn = PageBtn(txt=f'{i}', parent=self)
             self.main_paging.addWidget(btn.btn_return)
+
+
 
     def active_btn(self, type):
         if type:

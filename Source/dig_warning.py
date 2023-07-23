@@ -2,27 +2,19 @@ from PyQt5.QtWidgets import QDialog, QApplication
 from PyQt5.QtCore import Qt
 import sys
 from UI.UI_warning import Ui_Dialog
+from Source.Page import PageBtn
 
 class DialogWarning(QDialog, Ui_Dialog):
     def __init__(self):
         super().__init__()
+        s_ = PageBtn()
+
         self.setupUi(self)
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.connect_event()
         self.set_dialog_type(t_type='used_id', bt_cnt=None)
+        s_.set_background_color(self)
 
-    # 아니오, 닫기 눌렀을 때
-    # def reject(self) -> None:
-    #     print('아니오')
-    #     self.setResult(0)
-    #     self.close()
-
-    # 예, 확인 눌렀을 때
-    # def accept(self) -> None:
-    #     print('예')
-    #     self.setResult(1)
-    #     self.close()
-    #
     def accept_btn(self):
         print('예')
         self.close()

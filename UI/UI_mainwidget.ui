@@ -39,6 +39,9 @@
        <number>2</number>
       </property>
       <widget class="QWidget" name="login_page">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="leftMargin">
          <number>0</number>
@@ -114,8 +117,15 @@
                   </property>
                   <property name="font">
                    <font>
-                    <pointsize>36</pointsize>
+                    <family>나눔스퀘어 네오 Bold</family>
+                    <pointsize>41</pointsize>
+                    <weight>50</weight>
+                    <italic>false</italic>
+                    <bold>false</bold>
                    </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(47, 128, 237);</string>
                   </property>
                   <property name="text">
                    <string>Login</string>
@@ -129,8 +139,12 @@
                  <widget class="QLabel" name="email_label">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>14</pointsize>
                    </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(47, 128, 237);</string>
                   </property>
                   <property name="text">
                    <string>이메일</string>
@@ -145,6 +159,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
+                  </property>
                   <property name="text">
                    <string>admin</string>
                   </property>
@@ -154,8 +178,12 @@
                  <widget class="QLabel" name="password_label">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>14</pointsize>
                    </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(47, 128, 237);</string>
                   </property>
                   <property name="text">
                    <string>비밀번호</string>
@@ -170,6 +198,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
+                  </property>
                   <property name="text">
                    <string>1234</string>
                   </property>
@@ -179,8 +217,12 @@
                  <widget class="QLabel" name="register_btn">
                   <property name="font">
                    <font>
-                    <pointsize>10</pointsize>
+                    <family>나눔스퀘어 네오 Bold</family>
+                    <pointsize>11</pointsize>
                    </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(47, 128, 237);</string>
                   </property>
                   <property name="text">
                    <string>새로오셨나요? 회원으로 함께하세요.</string>
@@ -208,6 +250,18 @@
                    <width>124</width>
                    <height>48</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>나눔스퀘어 네오 Bold</family>
+                   <pointsize>11</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border: 2px solid white;
+border-radius: 7px;</string>
                  </property>
                  <property name="text">
                   <string>시작하기</string>
@@ -250,6 +304,9 @@
        </layout>
       </widget>
       <widget class="QWidget" name="register_page">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);</string>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <property name="leftMargin">
          <number>0</number>
@@ -337,8 +394,12 @@
                   </property>
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Bold</family>
                     <pointsize>36</pointsize>
                    </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(47, 128, 237);</string>
                   </property>
                   <property name="text">
                    <string>Register</string>
@@ -352,6 +413,7 @@
                  <widget class="QLabel" name="register_name_lab">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -368,6 +430,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
+                  </property>
                   <property name="placeholderText">
                    <string>이름을 입력하세요.</string>
                   </property>
@@ -377,6 +449,7 @@
                  <widget class="QLabel" name="register_email_lab">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -393,6 +466,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
+                  </property>
                   <property name="placeholderText">
                    <string>@을 포함하여 입력해 주세요.</string>
                   </property>
@@ -402,6 +485,7 @@
                  <widget class="QLabel" name="register_cellphone_num_lab">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -418,6 +502,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
+                  </property>
                   <property name="placeholderText">
                    <string>핸드폰 번호를 입력하세요.</string>
                   </property>
@@ -427,6 +521,7 @@
                  <widget class="QLabel" name="register_password_lab">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -443,6 +538,16 @@
                     <height>40</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
+                  </property>
                   <property name="placeholderText">
                    <string>영어와 숫자로 이루어져야 합니다.</string>
                   </property>
@@ -452,6 +557,7 @@
                  <widget class="QLabel" name="register_password_recheck_lab">
                   <property name="font">
                    <font>
+                    <family>나눔스퀘어 네오 Regular</family>
                     <pointsize>10</pointsize>
                    </font>
                   </property>
@@ -467,6 +573,16 @@
                     <width>0</width>
                     <height>40</height>
                    </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <family>나눔스퀘어 네오 Regular</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">border: 1px solid #2F80ED;
+border-radius: 10px;</string>
                   </property>
                   <property name="placeholderText">
                    <string>비밀번호를 한번 더 입력하세요.</string>
@@ -492,6 +608,18 @@
                    <height>48</height>
                   </size>
                  </property>
+                 <property name="font">
+                  <font>
+                   <family>나눔스퀘어 네오 Bold</family>
+                   <pointsize>11</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border: 2px solid white;
+border-radius: 7px;</string>
+                 </property>
                  <property name="text">
                   <string>시작하기</string>
                  </property>
@@ -503,8 +631,12 @@
               <widget class="QLabel" name="register_login_lab">
                <property name="font">
                 <font>
-                 <pointsize>10</pointsize>
+                 <family>나눔스퀘어 네오 Bold</family>
+                 <pointsize>11</pointsize>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(47, 128, 237);</string>
                </property>
                <property name="text">
                 <string>이미 회원이시라면 로그인 하세요!</string>
@@ -747,7 +879,7 @@
                             </font>
                            </property>
                            <property name="text">
-                            <string>게시판 제목</string>
+                            <string>우리반 게시판</string>
                            </property>
                           </widget>
                          </item>
@@ -789,7 +921,8 @@
                             </size>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(149, 190, 246);</string>
+                            <string notr="true">background-color: rgb(149, 190, 246);
+font: 10pt &quot;나눔스퀘어 네오 Regular&quot;;</string>
                            </property>
                            <property name="text">
                             <string>검색</string>
@@ -880,6 +1013,19 @@
                           </widget>
                          </item>
                          <item>
+                          <spacer name="horizontalSpacer_8">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>40</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                         <item>
                           <widget class="QPushButton" name="reply_btn">
                            <property name="minimumSize">
                             <size>
@@ -894,7 +1040,8 @@
                             </size>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(47, 128, 237);</string>
+                            <string notr="true">background-color: rgb(47, 128, 237);
+font: 10pt &quot;나눔스퀘어 네오 Regular&quot;;</string>
                            </property>
                            <property name="text">
                             <string>댓글 달기</string>
@@ -916,7 +1063,8 @@
                             </size>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(47, 128, 237);</string>
+                            <string notr="true">background-color: rgb(47, 128, 237);
+font: 10pt &quot;나눔스퀘어 네오 Regular&quot;;</string>
                            </property>
                            <property name="text">
                             <string>글 작성하기</string>
@@ -1149,6 +1297,7 @@
                           <widget class="QLabel" name="chat_title">
                            <property name="font">
                             <font>
+                             <family>나눔스퀘어 네오 Bold</family>
                              <pointsize>17</pointsize>
                             </font>
                            </property>
@@ -1172,6 +1321,12 @@
                          </item>
                          <item>
                           <widget class="QLineEdit" name="chat_search_lineedit">
+                           <property name="minimumSize">
+                            <size>
+                             <width>0</width>
+                             <height>25</height>
+                            </size>
+                           </property>
                            <property name="maximumSize">
                             <size>
                              <width>150</width>
@@ -1182,20 +1337,30 @@
                             <enum>Qt::ClickFocus</enum>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(255, 255, 255);</string>
+                            <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 7px;</string>
                            </property>
                           </widget>
                          </item>
                          <item>
                           <widget class="QPushButton" name="chat_search_btn">
+                           <property name="minimumSize">
+                            <size>
+                             <width>50</width>
+                             <height>25</height>
+                            </size>
+                           </property>
                            <property name="maximumSize">
                             <size>
-                             <width>43</width>
+                             <width>50</width>
                              <height>30</height>
                             </size>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(149, 190, 246);</string>
+                            <string notr="true">background-color: rgb(149, 190, 246);
+color: rgb(255, 255, 255);
+border-radius: 7px;
+font: 75 10.5pt &quot;나눔스퀘어 네오 Bold&quot;;</string>
                            </property>
                            <property name="text">
                             <string>검색</string>
@@ -1273,8 +1438,8 @@ width: 0px;
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>38</width>
-                              <height>314</height>
+                              <width>700</width>
+                              <height>331</height>
                              </rect>
                             </property>
                             <property name="styleSheet">
@@ -1370,8 +1535,16 @@ width: 0px;
                              <height>30</height>
                             </size>
                            </property>
+                           <property name="font">
+                            <font>
+                             <family>나눔스퀘어 네오 Regular</family>
+                             <pointsize>10</pointsize>
+                            </font>
+                           </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(255, 255, 255);</string>
+                            <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 7px;
+border: 1px solid gray;</string>
                            </property>
                           </widget>
                          </item>
@@ -1403,7 +1576,10 @@ width: 0px;
                             </size>
                            </property>
                            <property name="styleSheet">
-                            <string notr="true">background-color: rgb(47, 128, 237);</string>
+                            <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius: 7px;
+font: 75 10.5pt &quot;나눔스퀘어 네오 Bold&quot;;</string>
                            </property>
                            <property name="text">
                             <string>댓글달기</string>

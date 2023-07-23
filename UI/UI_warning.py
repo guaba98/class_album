@@ -15,7 +15,8 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(500, 360)
-        Dialog.setStyleSheet("background-color: rgb(255, 255, 255);")
+        Dialog.setStyleSheet("QDialog#Dialog{background-color: rgb(255, 255, 255);\n"
+"border: 1px solid gray;}")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
@@ -24,8 +25,7 @@ class Ui_Dialog(object):
         self.titile_lab = QtWidgets.QLabel(Dialog)
         self.titile_lab.setMaximumSize(QtCore.QSize(16777215, 60))
         self.titile_lab.setStyleSheet("background-color: rgb(47, 128, 237);\n"
-"border-top-left-radius:7px;\n"
-"border-top-right-radius: 7px;")
+"")
         self.titile_lab.setText("")
         self.titile_lab.setObjectName("titile_lab")
         self.verticalLayout.addWidget(self.titile_lab)

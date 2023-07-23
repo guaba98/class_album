@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">font: 10pt &quot;나눔스퀘어 네오 Regular&quot;;
+background-color: rgb(255, 255, 255);</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -44,9 +48,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-5</y>
         <width>683</width>
-        <height>420</height>
+        <height>424</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -116,6 +120,17 @@
              </item>
              <item>
               <widget class="QPushButton" name="del_btn">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius: 7px;</string>
+               </property>
                <property name="text">
                 <string>삭제</string>
                </property>
@@ -123,6 +138,17 @@
              </item>
              <item>
               <widget class="QPushButton" name="edit_btn">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius: 7px;</string>
+               </property>
                <property name="text">
                 <string>수정</string>
                </property>
@@ -144,14 +170,14 @@
              <item>
               <widget class="QLabel" name="img_lab">
                <property name="text">
-                <string>사진</string>
+                <string/>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QLabel" name="contents_lab">
                <property name="text">
-                <string>내용</string>
+                <string/>
                </property>
                <property name="wordWrap">
                 <bool>true</bool>
@@ -204,7 +230,12 @@
               </widget>
              </item>
              <item>
-              <widget class="QTableWidget" name="tableWidget"/>
+              <widget class="QTableWidget" name="tableWidget">
+               <property name="styleSheet">
+                <string notr="true">border-radius: 7px;
+border: 1px solid gray;</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>

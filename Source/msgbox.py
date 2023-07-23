@@ -29,6 +29,11 @@ class MsgBox(QWidget):
             border-radius: 7px;
             ''')
 
+        font = QFont()
+        font.setFamily("나눔스퀘어 네오 Regular")
+        font.setPointSize(10)
+        self.msg_lab.setFont(font)
+
         self.h_lay.addWidget(self.msg_lab)
         self.v_lay.addLayout(self.h_lay)
 

@@ -16,6 +16,7 @@ if __name__ == "__main__":
                 "./UI/UI_warning.py"]
 
     compile_ui(ui_files, py_files) # 여러 파일 컴파일
+    print('컴파일러 완료!')
 # import os
 # import sys
 #

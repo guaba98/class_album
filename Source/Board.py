@@ -52,13 +52,27 @@ class BoardWrite(QWidget, Ui_board_write_widget):
 class BoardRead(QWidget, Ui_board_read_widget):
     """글 읽는 부분"""
 
-    def __init__(self, writer, title, write_time, img_path, contents):  # 제목, 이미지 경로, 글내용
+    def __init__(self, writer, title, write_time, img_path, contents, parent):  # 제목, 이미지 경로, 글내용
         super().__init__()
         self.setupUi(self)
         print(writer, title, write_time, img_path, contents)
+        self.parent = parent
 
         self.writer_lab.setText(writer)
         self.write_time_lab.setText(write_time)
         self.img_lab.setPixmap(QPixmap(img_path).scaled(QSize(500, 500), aspectRatioMode=Qt.KeepAspectRatio))  # 이미지
         self.contents_lab.setText(str(contents))
         # self.tableWidget # 댓글 내용
+
+
+
+    def check_user_name(self):
+        print('[board.py] 유저이름, 작성자이름', self.parent.user_name, self.writer_lab)
+
+        if self.parent.user_name == 'admin' or self.parent.user_name == self.writer_lab:
+            self.del_btn.setVisible(True)
+            self.edit_btn.setVisible(True)
+        else:
+            self.del_btn.setVisible(False)
+            self.edit_btn.setVisible(False)
+

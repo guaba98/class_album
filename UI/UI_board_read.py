@@ -16,6 +16,8 @@ class Ui_board_read_widget(object):
         board_read_widget.setObjectName("board_read_widget")
         board_read_widget.resize(702, 380)
         board_read_widget.setMinimumSize(QtCore.QSize(0, 380))
+        board_read_widget.setStyleSheet("font: 10pt \"나눔스퀘어 네오 Regular\";\n"
+"background-color: rgb(255, 255, 255);")
         self.verticalLayout = QtWidgets.QVBoxLayout(board_read_widget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
@@ -24,7 +26,7 @@ class Ui_board_read_widget(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 683, 420))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -5, 683, 424))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -52,9 +54,17 @@ class Ui_board_read_widget(object):
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.del_btn = QtWidgets.QPushButton(self.title_widget)
+        self.del_btn.setMinimumSize(QtCore.QSize(70, 25))
+        self.del_btn.setStyleSheet("background-color: rgb(47, 128, 237);\n"
+"color: rgb(255, 255, 255);\n"
+"border-radius: 7px;")
         self.del_btn.setObjectName("del_btn")
         self.horizontalLayout.addWidget(self.del_btn)
         self.edit_btn = QtWidgets.QPushButton(self.title_widget)
+        self.edit_btn.setMinimumSize(QtCore.QSize(70, 25))
+        self.edit_btn.setStyleSheet("background-color: rgb(47, 128, 237);\n"
+"color: rgb(255, 255, 255);\n"
+"border-radius: 7px;")
         self.edit_btn.setObjectName("edit_btn")
         self.horizontalLayout.addWidget(self.edit_btn)
         self.commnets_cnt_lab = QtWidgets.QLabel(self.title_widget)
@@ -66,9 +76,11 @@ class Ui_board_read_widget(object):
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.widget_2)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.img_lab = QtWidgets.QLabel(self.widget_2)
+        self.img_lab.setText("")
         self.img_lab.setObjectName("img_lab")
         self.verticalLayout_3.addWidget(self.img_lab)
         self.contents_lab = QtWidgets.QLabel(self.widget_2)
+        self.contents_lab.setText("")
         self.contents_lab.setWordWrap(True)
         self.contents_lab.setObjectName("contents_lab")
         self.verticalLayout_3.addWidget(self.contents_lab)
@@ -90,6 +102,8 @@ class Ui_board_read_widget(object):
         self.horizontalLayout_2.addItem(spacerItem2)
         self.verticalLayout_5.addWidget(self.widget_3)
         self.tableWidget = QtWidgets.QTableWidget(self.widget)
+        self.tableWidget.setStyleSheet("border-radius: 7px;\n"
+"border: 1px solid gray;")
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)
@@ -111,8 +125,6 @@ class Ui_board_read_widget(object):
         self.del_btn.setText(_translate("board_read_widget", "삭제"))
         self.edit_btn.setText(_translate("board_read_widget", "수정"))
         self.commnets_cnt_lab.setText(_translate("board_read_widget", "댓글수"))
-        self.img_lab.setText(_translate("board_read_widget", "사진"))
-        self.contents_lab.setText(_translate("board_read_widget", "내용"))
         self.label.setText(_translate("board_read_widget", "댓글 보기"))
 
 

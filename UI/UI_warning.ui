@@ -14,7 +14,8 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">QDialog#Dialog{background-color: rgb(255, 255, 255);
+border: 1px solid gray;}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="leftMargin">
@@ -41,8 +42,7 @@
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(47, 128, 237);
-border-top-left-radius:7px;
-border-top-right-radius: 7px;</string>
+</string>
        </property>
        <property name="text">
         <string/>

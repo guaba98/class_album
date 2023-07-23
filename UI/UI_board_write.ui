@@ -25,6 +25,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="leftMargin">
     <number>0</number>
@@ -160,6 +163,27 @@
              </item>
              <item>
               <widget class="QPushButton" name="admit_btn">
+               <property name="minimumSize">
+                <size>
+                 <width>70</width>
+                 <height>25</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>나눔스퀘어 네오 Bold</family>
+                 <pointsize>9</pointsize>
+                 <weight>9</weight>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius: 7px;
+font: 75 9pt &quot;나눔스퀘어 네오 Bold&quot;;</string>
+               </property>
                <property name="text">
                 <string>등록</string>
                </property>
@@ -184,6 +208,15 @@
                  <width>0</width>
                  <height>30</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>나눔스퀘어 네오 Regular</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border-radius:7px;
+border: 1px solid gray;</string>
                </property>
                <property name="placeholderText">
                 <string>제목을 입력해 주세요.</string>
@@ -245,6 +278,15 @@
              </item>
              <item>
               <widget class="QTextEdit" name="contents_textedit">
+               <property name="font">
+                <font>
+                 <family>나눔스퀘어 네오 Regular</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border-radius:7px;
+border: 1px solid gray;</string>
+               </property>
                <property name="placeholderText">
                 <string>여기에 작성글을 업로드하세요.</string>
                </property>
@@ -289,7 +331,7 @@
                <property name="minimumSize">
                 <size>
                  <width>100</width>
-                 <height>0</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -297,6 +339,21 @@
                  <width>100</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>나눔스퀘어 네오 Bold</family>
+                 <pointsize>9</pointsize>
+                 <weight>9</weight>
+                 <italic>false</italic>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(47, 128, 237);
+color: rgb(255, 255, 255);
+border-radius: 7px;
+font: 75 9pt &quot;나눔스퀘어 네오 Bold&quot;;</string>
                </property>
                <property name="text">
                 <string>이미지 업로드</string>

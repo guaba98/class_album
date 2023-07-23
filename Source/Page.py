@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QPushButton, QGraphicsDropShadowEffect
 
 
 class PageBtn(object):
-    def __init__(self, txt, parent):
+    def __init__(self, txt=None, parent=None):
         self.parent = parent
 
         # 버튼 생성
@@ -17,18 +17,18 @@ class PageBtn(object):
         self.button.setMinimumSize(QSize(40, 40))
         self.button.setMaximumSize(QSize(40, 40))
         self.button.setText(txt)
-
-        # 버튼 그림자 생성
-        effect = QGraphicsDropShadowEffect()
-        effect.setBlurRadius(5)
-        effect.setColor(QColor(0, 0, 0, 100))
-        effect.setOffset(1, 3)  # 객체와 그림자 사이의 거리 또는 변위
-        self.button.setGraphicsEffect(effect)
+        self.set_background_color(self.button)
 
         # 버튼 클릭 이벤트
         self.button.clicked.connect(lambda x, y=txt: self.parent.move_paging(y))
         self.button.clicked.connect(self.change_color_btn)
 
+    def set_background_color(self, btn):
+        effect = QGraphicsDropShadowEffect()
+        effect.setBlurRadius(5)
+        effect.setColor(QColor(0, 0, 0, 100))
+        effect.setOffset(1, 3)  # 객체와 그림자 사이의 거리 또는 변위
+        btn.setGraphicsEffect(effect)
 
     def change_color_btn(self):
         print('여길 탑니다')
